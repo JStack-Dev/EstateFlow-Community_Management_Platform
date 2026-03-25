@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import API_URL from "../../config/api";
 
 type Stats = {
   total: number;

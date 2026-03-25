@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import API_URL from "../../config/api"; // 🔥 IMPORTANTE
 
 export const AuthContext = createContext(null);
 
