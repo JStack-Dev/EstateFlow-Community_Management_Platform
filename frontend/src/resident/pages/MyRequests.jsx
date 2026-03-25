@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function MyRequests() {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/incidents/", {
+    fetch(`${API_URL}/api/incidents/`, {
       credentials: "include",
     })
       .then((res) => res.json())

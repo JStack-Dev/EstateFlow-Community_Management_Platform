@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
+
 import KanbanCard from "../components/cards/KanbanCard";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -10,7 +12,7 @@ export default function Operations() {
   const [incidents, setIncidents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/incidents/", {
+    fetch(`${API_URL}/api/incidents/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -32,7 +34,7 @@ export default function Operations() {
       )
     );
 
-    fetch(`http://localhost:8000/api/incidents/${incidentId}/`, {
+    fetch(`${API_URL}/api/incidents/${incidentId}/`, {
       method: "PATCH",
       credentials: "include",
       headers: {

@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
-// 🔥 exportamos el contexto (IMPORTANTE para evitar error de Fast Refresh)
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -8,7 +8,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/auth/me/", {
+    fetch(`${API_URL}/api/auth/me/`, {
       credentials: "include",
     })
       .then((res) => {
@@ -26,7 +26,6 @@ export function AuthProvider({ children }) {
       });
   }, []);
 
-  // 🔥 Evita error "role no existe en never"
   const role = user && typeof user === "object" ? user.role : null;
 
   const isAuthenticated = !!user;

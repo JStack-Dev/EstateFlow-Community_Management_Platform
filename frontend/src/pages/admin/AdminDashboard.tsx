@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 type Stats = {
   total: number;
@@ -12,7 +13,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/incidents/stats/", {
+    fetch(`${API_URL}/api/incidents/stats/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -32,9 +33,8 @@ export default function AdminDashboard() {
         <li>Resueltas: {stats.resolved}</li>
         <li>Media resolución: {stats.avg_resolution_hours}h</li>
       </ul>
+
+      <a href="/admin/users">Gestionar usuarios</a>
     </div>
   );
 }
-
-<a href="/admin/users">Gestionar usuarios</a>
-

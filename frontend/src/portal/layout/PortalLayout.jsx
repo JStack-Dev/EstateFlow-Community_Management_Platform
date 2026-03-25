@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import NotificationBell from "../../components/NotificationBell";
+import API_URL from "../../config/api"; // 🔥 IMPORTANTE
 
 export default function PortalLayout({ children }) {
 
@@ -9,7 +10,7 @@ export default function PortalLayout({ children }) {
 
     try {
 
-      await fetch("http://localhost:8000/api/auth/logout/", {
+      await fetch(`${API_URL}/api/auth/logout/`, {
         method: "POST",
         credentials: "include",
       });

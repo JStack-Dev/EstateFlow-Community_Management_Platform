@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -7,7 +8,7 @@ export default function UsersPage() {
   // CARGAR USUARIOS
   // -------------------------
   useEffect(() => {
-    fetch("http://localhost:8000/api/users/", {
+    fetch(`${API_URL}/api/users/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -18,7 +19,7 @@ export default function UsersPage() {
   // CAMBIAR ROLE
   // -------------------------
   const updateRole = (userId, newRole) => {
-    fetch(`http://localhost:8000/api/users/${userId}/`, {
+    fetch(`${API_URL}/api/users/${userId}/`, {
       method: "PATCH",
       credentials: "include",
       headers: {
@@ -38,7 +39,7 @@ export default function UsersPage() {
   // ACTIVAR / DESACTIVAR
   // -------------------------
   const toggleActivo = (user) => {
-    fetch(`http://localhost:8000/api/users/${user.id}/`, {
+    fetch(`${API_URL}/api/users/${user.id}/`, {
       method: "PATCH",
       credentials: "include",
       headers: {

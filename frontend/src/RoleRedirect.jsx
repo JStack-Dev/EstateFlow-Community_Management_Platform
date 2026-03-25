@@ -6,17 +6,12 @@ export default function RoleRedirect() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/current-user/", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setRole(data.role);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    // 🔥 MODO DEMO (sin backend)
+    // Simulamos usuario logueado
+    const demoRole = "TECH"; // cambia a "USER" si quieres probar
+
+    setRole(demoRole);
+    setLoading(false);
   }, []);
 
   if (loading) {

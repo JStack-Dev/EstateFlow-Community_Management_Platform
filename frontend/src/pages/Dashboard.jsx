@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
+
 import StatCard from "../components/ui/StatCard";
 import ChartCard from "../components/ui/ChartCard";
 
@@ -19,7 +21,7 @@ export default function Dashboard() {
   const [incidents, setIncidents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/incidents/", {
+    fetch(`${API_URL}/api/incidents/`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -44,7 +46,6 @@ export default function Dashboard() {
       .reduce((acc, curr) => acc + curr.resolution_time, 0) /
     (incidents.filter((i) => i.resolution_time).length || 1);
 
-  // Agrupar por categoría
   const categoryData = Object.values(
     incidents.reduce((acc, curr) => {
       acc[curr.category] = acc[curr.category] || {

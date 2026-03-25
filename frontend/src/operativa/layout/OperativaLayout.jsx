@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function OperativaLayout({ children }) {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:8000/api/logout/", {
+    await fetch(`${API_URL}/api/logout/`, {
       method: "POST",
       credentials: "include",
     });
