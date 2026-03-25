@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import API_URL from "../../config/api";
 
 export default function OperativaLayout({ children }) {
   const navigate = useNavigate();
