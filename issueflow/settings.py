@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # --------------------------------------------------
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # SIEMPRE ARRIBA
 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -144,7 +144,7 @@ REST_FRAMEWORK = {
 }
 
 # --------------------------------------------------
-# CORS + FRONTEND
+# CORS + FRONTEND (CONFIGURACIÓN CORRECTA)
 # --------------------------------------------------
 CORS_ALLOW_CREDENTIALS = True
 
@@ -158,11 +158,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://jstack-dev.github.io",
 ]
 
+# 🔥 IMPORTANTE PARA COOKIES ENTRE DOMINIOS
 SESSION_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SAMESITE = "None"
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# 🔥 EN RENDER DEBE SER FALSE (si no rompe cookies)
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # --------------------------------------------------
 # DEFAULT PK
