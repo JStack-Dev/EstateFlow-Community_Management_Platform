@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function ProtectedRoute({ children }) {
 
@@ -13,7 +14,7 @@ export default function ProtectedRoute({ children }) {
       try {
 
         const response = await fetch(
-          "http://localhost:8000/api/auth/me/",
+          `${API_URL}/api/auth/me/`, // 🔥 AQUÍ ESTÁ LA CLAVE
           {
             credentials: "include",
           }

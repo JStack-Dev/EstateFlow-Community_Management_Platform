@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,30 +23,34 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    const response = await fetch(
-      "http://localhost:8000/api/auth/login/",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/login/`, // 🔥 AQUÍ ESTÁ LA CLAVE
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!response.ok) {
+        setError("Credenciales incorrectas");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      setError("Credenciales incorrectas");
-      return;
-    }
+      const data = await response.json();
 
-    const data = await response.json();
+      if (data.tipo_usuario === "PERSONAL") {
+        navigate("/operativa");
+      } else {
+        navigate("/portal");
+      }
 
-    // Redirección profesional basada en tipo_usuario
-    if (data.tipo_usuario === "PERSONAL") {
-      navigate("/operativa");
-    } else {
-      navigate("/portal");
+    } catch {
+      setError("No se pudo conectar con el servidor");
     }
   };
 

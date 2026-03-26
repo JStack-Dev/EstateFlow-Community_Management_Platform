@@ -1,7 +1,6 @@
-import { createContext, useEffect, useState } from "react";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
-
-export const AuthContext = createContext(null);
+import { useEffect, useState } from "react";
+import API_URL from "../config/api";
+import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -15,15 +14,9 @@ export function AuthProvider({ children }) {
         if (!res.ok) throw new Error("No autenticado");
         return res.json();
       })
-      .then((data) => {
-        setUser(data);
-      })
-      .catch(() => {
-        setUser(null);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      .then((data) => setUser(data))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   const role = user && typeof user === "object" ? user.role : null;

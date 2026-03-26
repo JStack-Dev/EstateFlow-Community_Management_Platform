@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import API_URL from "../config/api"; // 🔥 IMPORTANTE
 
 export default function Register() {
 
@@ -28,7 +29,7 @@ export default function Register() {
     try {
 
       const response = await fetch(
-        "http://localhost:8000/api/auth/register/",
+        `${API_URL}/api/auth/register/`, // 🔥 AQUÍ ESTÁ LA CLAVE
         {
           method: "POST",
           headers: {
