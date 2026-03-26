@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./auth/Login";
 import Register from "./auth/Register";
@@ -30,7 +30,7 @@ import UsersPage from "./pages/admin/UsersPage";
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
 
         {/* ========================= */}
@@ -220,7 +220,7 @@ function App() {
         <Route path="*" element={<Navigate to="/login" replace />} />
 
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
