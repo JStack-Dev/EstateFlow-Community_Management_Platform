@@ -7,11 +7,20 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     fetch(`${API_URL}/api/auth/me/`, {
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("No autenticado");
+        if (!res.ok) throw new Error();
         return res.json();
       })
       .then((data) => setUser(data))
@@ -19,21 +28,16 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const role = user && typeof user === "object" ? user.role : null;
-
-  const isAuthenticated = !!user;
-  const isAdmin = role === "ADMIN";
-  const isStaff = role === "STAFF" || role === "ADMIN";
+  const role = user?.role ?? null;
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        setUser,
         loading,
-        isAuthenticated,
-        isAdmin,
-        isStaff,
+        isAuthenticated: !!user,
+        isAdmin: role === "ADMIN",
+        isStaff: role === "STAFF" || role === "ADMIN",
       }}
     >
       {children}

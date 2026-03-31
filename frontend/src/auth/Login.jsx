@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import { Link } from "react-router-dom";
+import API_URL from "../config/api";
 
 export default function Login() {
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -24,32 +22,28 @@ export default function Login() {
     setError(null);
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/auth/login/`, // 🔥 AQUÍ ESTÁ LA CLAVE
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(`${API_URL}/api/auth/login/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      if (!response.ok) {
-        setError("Credenciales incorrectas");
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data?.error || "Error al iniciar sesión");
         return;
       }
 
-      const data = await response.json();
+      // 🔥 guardar token
+      localStorage.setItem("token", data.access);
 
-      if (data.tipo_usuario === "PERSONAL") {
-        navigate("/operativa");
-      } else {
-        navigate("/portal");
-      }
+      window.location.href = "/portal";
 
-    } catch {
+    } catch (err) {
+      console.error(err);
       setError("No se pudo conectar con el servidor");
     }
   };
@@ -81,7 +75,9 @@ export default function Login() {
 
         {error && <div style={styles.error}>{error}</div>}
 
-        <button style={styles.button}>Iniciar sesión</button>
+        <button type="submit" style={styles.button}>
+          Iniciar sesión
+        </button>
 
         <div style={styles.footer}>
           ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
@@ -103,7 +99,6 @@ const styles = {
     backgroundColor: "white",
     padding: "40px",
     borderRadius: "16px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
     width: "350px",
     display: "flex",
     flexDirection: "column",
@@ -111,12 +106,11 @@ const styles = {
   },
   title: {
     textAlign: "center",
-    marginBottom: "10px",
   },
   input: {
-    padding: "10px 14px",
+    padding: "10px",
     borderRadius: "8px",
-    border: "1px solid #e5e7eb",
+    border: "1px solid #ccc",
   },
   button: {
     padding: "10px",
@@ -124,14 +118,11 @@ const styles = {
     border: "none",
     backgroundColor: "#111827",
     color: "white",
-    cursor: "pointer",
   },
   footer: {
     textAlign: "center",
-    fontSize: "14px",
   },
   error: {
     color: "red",
-    fontSize: "13px",
   },
 };
