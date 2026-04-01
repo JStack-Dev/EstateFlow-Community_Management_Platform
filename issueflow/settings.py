@@ -1,5 +1,16 @@
 from pathlib import Path
+from datetime import timedelta
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
 # --------------------------------------------------
 # RUTAS BASE DEL PROYECTO
 # --------------------------------------------------
@@ -47,7 +58,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # --------------------------------------------------
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",  # SIEMPRE ARRIBA
+    "corsheaders.middleware.CorsMiddleware",  # IMPORTANTE: el primero
 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -144,25 +155,28 @@ REST_FRAMEWORK = {
 }
 
 # --------------------------------------------------
-# CORS + FRONTEND (CONFIGURACIÓN CORRECTA)
+# 🔥 CORS + FRONTEND (CORREGIDO)
 # --------------------------------------------------
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "http://localhost:4173",  # ✅ AÑADIDO (preview)
     "https://jstack-dev.github.io",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "http://localhost:4173",  # ✅ AÑADIDO (preview)
     "https://jstack-dev.github.io",
 ]
 
-# 🔥 IMPORTANTE PARA COOKIES ENTRE DOMINIOS
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
+# --------------------------------------------------
+# 🔥 COOKIES (CLAVE PARA AUTH)
+# --------------------------------------------------
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
 
-# 🔥 EN RENDER DEBE SER FALSE (si no rompe cookies)
 SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
