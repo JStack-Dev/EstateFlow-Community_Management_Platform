@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import API_URL from "../config/api";
 
 export default function Login() {
+  const navigate = useNavigate(); // ✅ navegación correcta
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -42,12 +44,12 @@ export default function Login() {
         return;
       }
 
-      // 🔥 Guardar tokens JWT correctamente
+      // ✅ Guardar tokens JWT
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
 
-      // 🔥 Redirección tras login
-      window.location.href = "/portal";
+      // ✅ Redirección correcta (SIN romper GitHub Pages)
+      navigate("/portal");
 
     } catch (err) {
       console.error("ERROR LOGIN:", err);
