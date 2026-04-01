@@ -1,12 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [react()],
-
-  // 🔥 CLAVE: Vite usa "mode"
-  base:
-    mode === "production"
-      ? "/EstateFlow-Community_Management_Platform/"
-      : "/",
-}));
+  base: "/EstateFlow-Community_Management_Platform/", // 👈 CLAVE
+});
