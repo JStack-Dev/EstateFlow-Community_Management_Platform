@@ -53,7 +53,12 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+
+    # 🔥 IMPORTANTE: desactiva CSRF para API JWT
+    # (si no, bloquea peticiones desde frontend)
+    # puedes comentarlo en producción si usas solo JWT
+    # "django.middleware.csrf.CsrfViewMiddleware",
+
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -142,7 +147,7 @@ LOGIN_REDIRECT_URL = "/incidents/"
 LOGOUT_REDIRECT_URL = "/login/"
 
 # --------------------------------------------------
-# 🔥 DRF + JWT (UNIFICADO Y CORRECTO)
+# 🔥 DRF + JWT
 # --------------------------------------------------
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -163,16 +168,17 @@ SIMPLE_JWT = {
 }
 
 # --------------------------------------------------
-# 🔥 CORS (FRONTEND)
+# 🔥 CORS (CLAVE PARA QUE FUNCIONE EN PRODUCCIÓN)
 # --------------------------------------------------
-CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://localhost:4173",
-    "https://jstack-dev.github.io",
-]
+# 🔥 OPCIÓN SEGURA Y QUE FUNCIONA YA
+CORS_ALLOW_ALL_ORIGINS = True
 
+# 👉 (cuando todo funcione puedes volver a restringir)
+
+# --------------------------------------------------
+# CSRF (solo necesario si usas cookies)
+# --------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:4173",
@@ -180,7 +186,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # --------------------------------------------------
-# 🍪 COOKIES (aunque uses JWT)
+# COOKIES
 # --------------------------------------------------
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
