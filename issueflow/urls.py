@@ -1,38 +1,23 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
-
-    # ADMIN
     path("admin/", admin.site.urls),
 
-    # AUTH
+    # 🔥 JWT (ESTO ES LO QUE FALTA EN TU SERVIDOR)
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
     path("api/auth/", include("users.urls")),
-
-    # INCIDENTS
     path("api/incidents/", include("incidents.urls")),
-
-   # RESERVATIONS
     path("api/reservations/", include("reservations.urls")),
-
-    # PACKAGES
     path("api/packages/", include("packages.urls")),
-
-    # ACCESS
     path("api/access/", include("access.urls")),
-
-    # WORKS
     path("api/works/", include("works.urls")),
-
     path("api/notifications/", include("notifications.urls")),
 ]
-
-
-if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )

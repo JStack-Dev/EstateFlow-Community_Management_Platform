@@ -1,16 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-}
 # --------------------------------------------------
 # RUTAS BASE DEL PROYECTO
 # --------------------------------------------------
@@ -58,7 +48,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # --------------------------------------------------
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",  # IMPORTANTE: el primero
+    "corsheaders.middleware.CorsMiddleware",
 
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -134,45 +124,63 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # --------------------------------------------------
+# MEDIA
+# --------------------------------------------------
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# --------------------------------------------------
 # USER
 # --------------------------------------------------
 AUTH_USER_MODEL = "users.User"
 
 # --------------------------------------------------
-# AUTH
+# AUTH REDIRECTS (solo admin/templates)
 # --------------------------------------------------
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/incidents/"
 LOGOUT_REDIRECT_URL = "/login/"
 
 # --------------------------------------------------
-# DRF
+# 🔥 DRF + JWT (UNIFICADO Y CORRECTO)
 # --------------------------------------------------
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-    ],
+    ),
 }
 
 # --------------------------------------------------
-# 🔥 CORS + FRONTEND (CORREGIDO)
+# 🔐 JWT CONFIG
+# --------------------------------------------------
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
+
+# --------------------------------------------------
+# 🔥 CORS (FRONTEND)
 # --------------------------------------------------
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://localhost:4173",  # ✅ AÑADIDO (preview)
+    "http://localhost:4173",
     "https://jstack-dev.github.io",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    "http://localhost:4173",  # ✅ AÑADIDO (preview)
+    "http://localhost:4173",
     "https://jstack-dev.github.io",
 ]
 
 # --------------------------------------------------
-# 🔥 COOKIES (CLAVE PARA AUTH)
+# 🍪 COOKIES (aunque uses JWT)
 # --------------------------------------------------
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
@@ -184,9 +192,3 @@ CSRF_COOKIE_SECURE = False
 # DEFAULT PK
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# --------------------------------------------------
-# MEDIA
-# --------------------------------------------------
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
