@@ -21,29 +21,36 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
+    console.log("API_URL:", API_URL);
+
     try {
-      const res = await fetch(`${API_URL}/api/auth/login/`, {
+      const res = await fetch(`${API_URL}/api/token/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.error || "Error al iniciar sesión");
+        setError(data?.detail || "Credenciales incorrectas");
         return;
       }
 
-      // 🔥 guardar token
-      localStorage.setItem("token", data.access);
+      // 🔥 Guardar tokens JWT correctamente
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
 
+      // 🔥 Redirección tras login
       window.location.href = "/portal";
 
     } catch (err) {
-      console.error(err);
+      console.error("ERROR LOGIN:", err);
       setError("No se pudo conectar con el servidor");
     }
   };
