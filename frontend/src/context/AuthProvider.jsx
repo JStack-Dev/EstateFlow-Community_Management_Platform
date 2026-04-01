@@ -7,25 +7,35 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access"); // ✅ corregido
 
     if (!token) {
+      setUser(null);
       setLoading(false);
       return;
     }
 
-    fetch(`${API_URL}/api/auth/me/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/auth/me/`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ JWT correcto
+          },
+        });
+
         if (!res.ok) throw new Error();
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
+
+        const data = await res.json();
+        setUser(data);
+      } catch (error) {
+        console.error("Error obteniendo usuario:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const role = user?.role ?? null;
