@@ -8,6 +8,9 @@ from rest_framework import status
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from common.permissions import IsAdmin
+from .serializers import UserSerializer
+
 User = get_user_model()
 
 
@@ -39,9 +42,12 @@ def register_api(request):
         user = User.objects.create_user(
             username=username,
             password=password,
-            tipo_usuario=tipo_usuario,
-            activo=True
+            tipo_usuario=tipo_usuario
         )
+
+        # 🔥 CLAVE: activar correctamente el usuario para JWT
+        user.is_active = True
+        user.save()
 
         return Response({
             "message": "Usuario creado correctamente",
@@ -76,14 +82,13 @@ def login_api(request):
 
     user = authenticate(username=username, password=password)
 
-    # 🔴 VALIDACIÓN CLAVE
     if user is None:
         return Response(
             {"error": "Credenciales incorrectas"},
             status=status.HTTP_401_UNAUTHORIZED
         )
 
-    # 🔴 MUY IMPORTANTE (tu problema estaba aquí seguramente)
+    # 🔥 CLAVE TOTAL
     if not user.is_active:
         return Response(
             {"error": "Usuario inactivo"},
@@ -132,10 +137,6 @@ def current_user_api(request):
 # ---------------------------------------
 # USERS - LIST
 # ---------------------------------------
-
-from common.permissions import IsAdmin
-from .serializers import UserSerializer
-
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, IsAdmin])
