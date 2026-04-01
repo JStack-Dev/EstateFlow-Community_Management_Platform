@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("access"); // ✅ corregido
+    const token = localStorage.getItem("access");
 
     if (!token) {
       setUser(null);
@@ -18,17 +18,19 @@ export function AuthProvider({ children }) {
     const fetchUser = async () => {
       try {
         const res = await fetch(`${API_URL}/api/auth/me/`, {
+          method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ JWT correcto
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // 🔥 CLAVE
           },
         });
 
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error("No autenticado");
 
         const data = await res.json();
         setUser(data);
       } catch (error) {
-        console.error("Error obteniendo usuario:", error);
+        console.error("Error usuario:", error);
         setUser(null);
       } finally {
         setLoading(false);
