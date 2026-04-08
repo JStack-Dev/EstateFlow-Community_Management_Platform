@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 
+// Auth
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -9,7 +10,7 @@ import RoleGuard from "./components/RoleGuard";
 import PortalLayout from "./portal/layout/PortalLayout";
 import OperativaLayout from "./operativa/layout/OperativaLayout";
 
-// Portal
+// Portal (USER)
 import Inicio from "./portal/pages/Inicio";
 import Incidencias from "./portal/pages/Incidencias";
 import Reservas from "./portal/pages/Reservas";
@@ -18,7 +19,7 @@ import Obras from "./portal/pages/Obras";
 import Perfil from "./portal/pages/Perfil";
 import Accesos from "./portal/pages/Accesos";
 
-// Operativa
+// Operativa (STAFF / ADMIN)
 import Panel from "./operativa/pages/Panel";
 import IncidenciasOperativa from "./operativa/pages/Incidencias";
 import Paquetes from "./operativa/pages/Paquetes";
@@ -134,7 +135,7 @@ function App() {
         />
 
         {/* ========================= */}
-        {/* OPERATIVA */}
+        {/* OPERATIVA (STAFF / ADMIN) */}
         {/* ========================= */}
         <Route
           path="/operativa"

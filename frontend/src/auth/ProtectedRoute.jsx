@@ -1,48 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import { AuthContext } from "../context/AuthContext";
 
 export default function ProtectedRoute({ children }) {
+  const { isAuthenticated, loading } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  if (loading) return <div>Cargando...</div>;
 
-  useEffect(() => {
-
-    const checkSession = async () => {
-
-      try {
-
-        const response = await fetch(
-          `${API_URL}/api/auth/me/`, // 🔥 AQUÍ ESTÁ LA CLAVE
-          {
-            credentials: "include",
-          }
-        );
-
-        if (response.ok) {
-          setAuthenticated(true);
-        } else {
-          setAuthenticated(false);
-        }
-
-      } catch {
-        setAuthenticated(false);
-      }
-
-      setLoading(false);
-    };
-
-    checkSession();
-
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!authenticated) {
-    return <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
   }
 
   return children;

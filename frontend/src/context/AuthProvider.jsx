@@ -1,29 +1,24 @@
 import { useEffect, useState } from "react";
-import API_URL from "../config/api";
 import { AuthContext } from "./AuthContext";
+import { apiFetch } from "../utils/apiClient";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const logout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setUser(null);
+    window.location.href = "/#/login";
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/auth/me/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // 🔥 CLAVE
-          },
-        });
+        const res = await apiFetch("/api/auth/me/");
+
+        if (!res) return logout(); // 🔥 clave
 
         if (!res.ok) throw new Error("No autenticado");
 
@@ -31,7 +26,7 @@ export function AuthProvider({ children }) {
         setUser(data);
       } catch (error) {
         console.error("Error usuario:", error);
-        setUser(null);
+        logout();
       } finally {
         setLoading(false);
       }
@@ -46,7 +41,9 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         loading,
+        logout,
         isAuthenticated: !!user,
         isAdmin: role === "ADMIN",
         isStaff: role === "STAFF" || role === "ADMIN",

@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API_URL from "../config/api";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
-  const navigate = useNavigate(); // ✅ navegación correcta
+  const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -23,34 +25,44 @@ export default function Login() {
     e.preventDefault();
     setError(null);
 
-    console.log("API_URL:", API_URL);
-
     try {
       const res = await fetch(`${API_URL}/api/token/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
+
+      console.log("LOGIN RESPONSE:", data);
 
       if (!res.ok) {
         setError(data?.detail || "Credenciales incorrectas");
         return;
       }
 
-      // ✅ Guardar tokens JWT
+      // Guardar tokens
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
 
-      // ✅ Redirección correcta (SIN romper GitHub Pages)
-      navigate("/portal");
+      // Obtener usuario inmediatamente
+      const userRes = await fetch(`${API_URL}/api/auth/me/`, {
+        headers: {
+          Authorization: `Bearer ${data.access}`,
+        },
+      });
 
+      if (!userRes.ok) throw new Error("Error obteniendo usuario");
+
+      const userData = await userRes.json();
+
+      console.log("USER DATA:", userData);
+
+      setUser(userData);
+
+      navigate("/portal");
     } catch (err) {
       console.error("ERROR LOGIN:", err);
       setError("No se pudo conectar con el servidor");
