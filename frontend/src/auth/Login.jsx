@@ -13,17 +13,24 @@ export default function Login() {
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
+
+    // 🔥 DEBUG CLAVE
+    console.log("LOGIN DATA:", formData);
 
     try {
       const res = await fetch(`${API_URL}/api/token/`, {
@@ -40,21 +47,24 @@ export default function Login() {
 
       if (!res.ok) {
         setError(data?.detail || "Credenciales incorrectas");
+        setLoading(false);
         return;
       }
 
-      // Guardar tokens
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
 
-      // Obtener usuario inmediatamente
       const userRes = await fetch(`${API_URL}/api/auth/me/`, {
+        method: "GET",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${data.access}`,
         },
       });
 
-      if (!userRes.ok) throw new Error("Error obteniendo usuario");
+      if (!userRes.ok) {
+        throw new Error("Error obteniendo usuario");
+      }
 
       const userData = await userRes.json();
 
@@ -63,9 +73,12 @@ export default function Login() {
       setUser(userData);
 
       navigate("/portal");
+
     } catch (err) {
       console.error("ERROR LOGIN:", err);
       setError("No se pudo conectar con el servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,8 +109,8 @@ export default function Login() {
 
         {error && <div style={styles.error}>{error}</div>}
 
-        <button type="submit" style={styles.button}>
-          Iniciar sesión
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? "Cargando..." : "Iniciar sesión"}
         </button>
 
         <div style={styles.footer}>
@@ -124,6 +137,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     gap: "15px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.05)",
   },
   title: {
     textAlign: "center",
@@ -139,11 +153,15 @@ const styles = {
     border: "none",
     backgroundColor: "#111827",
     color: "white",
+    cursor: "pointer",
   },
   footer: {
     textAlign: "center",
+    fontSize: "14px",
   },
   error: {
     color: "red",
+    fontSize: "13px",
+    textAlign: "center",
   },
 };
