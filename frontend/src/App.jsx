@@ -135,7 +135,7 @@ function App() {
         />
 
         {/* ========================= */}
-        {/* OPERATIVA (STAFF / ADMIN) */}
+        {/* OPERATIVA */}
         {/* ========================= */}
         <Route
           path="/operativa"
@@ -215,9 +215,13 @@ function App() {
         />
 
         {/* ========================= */}
-        {/* REDIRECCIONES */}
+        {/* REDIRECCIONES CORREGIDAS */}
         {/* ========================= */}
+
+        {/* 👇 IMPORTANTE: usar ruta explícita */}
         <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* 👇 fallback */}
         <Route path="*" element={<Navigate to="/login" replace />} />
 
       </Routes>
