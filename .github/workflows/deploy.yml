@@ -35,7 +35,7 @@ jobs:
         run: npm run build
         working-directory: frontend
 
-      # 🔍 DEBUG REAL (para verificar que existe index.html)
+      # 🔍 DEBUG (verifica que existe index.html)
       - name: Debug dist
         run: ls -la frontend/dist
 
@@ -54,6 +54,10 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
+    # 🔥 FIX CRÍTICO (problema real de GitHub ahora mismo)
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Deploy to GitHub Pages
