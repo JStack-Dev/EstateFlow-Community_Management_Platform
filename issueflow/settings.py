@@ -54,9 +54,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
 
-    # 🔥 IMPORTANTE: desactiva CSRF para API JWT
-    # (si no, bloquea peticiones desde frontend)
-    # puedes comentarlo en producción si usas solo JWT
+    # ⚠️ CSRF desactivado porque usas JWT (correcto en tu caso)
     # "django.middleware.csrf.CsrfViewMiddleware",
 
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -147,15 +145,15 @@ LOGIN_REDIRECT_URL = "/incidents/"
 LOGOUT_REDIRECT_URL = "/login/"
 
 # --------------------------------------------------
-# 🔥 DRF + JWT
+# 🔥 DRF + JWT (CLAVE)
 # --------------------------------------------------
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": (
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
-    ),
+    ],
 }
 
 # --------------------------------------------------
@@ -165,19 +163,16 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
 }
 
 # --------------------------------------------------
-# 🔥 CORS (CLAVE PARA QUE FUNCIONE EN PRODUCCIÓN)
+# 🔥 CORS
 # --------------------------------------------------
-
-# 🔥 OPCIÓN SEGURA Y QUE FUNCIONA YA
 CORS_ALLOW_ALL_ORIGINS = True
 
-# 👉 (cuando todo funcione puedes volver a restringir)
-
 # --------------------------------------------------
-# CSRF (solo necesario si usas cookies)
+# CSRF (solo si usas cookies)
 # --------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",

@@ -4,6 +4,5 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
 
-  // 🔥 CAMBIO CLAVE
-  base: "./",
+  base: "/EstateFlow-Community_Management_Platform/",
 });

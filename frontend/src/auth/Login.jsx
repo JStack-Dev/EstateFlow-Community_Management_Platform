@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import API_URL from "../config/api";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
@@ -26,14 +25,17 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (loading) return; // 🔥 evita doble submit
+
     setError(null);
     setLoading(true);
 
-    // 🔥 DEBUG CLAVE
-    console.log("LOGIN DATA:", formData);
-
     try {
-      const res = await fetch(`${API_URL}/api/token/`, {
+      // -----------------------
+      // LOGIN (TOKEN)
+      // -----------------------
+      const loginRes = await fetch("http://127.0.0.1:8000/api/token/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,41 +43,48 @@ export default function Login() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const loginData = await loginRes.json();
 
-      console.log("LOGIN RESPONSE:", data);
-
-      if (!res.ok) {
-        setError(data?.detail || "Credenciales incorrectas");
-        setLoading(false);
+      if (!loginRes.ok) {
+        setError(loginData?.detail || "Credenciales incorrectas");
         return;
       }
 
-      localStorage.setItem("access", data.access);
-      localStorage.setItem("refresh", data.refresh);
+      // -----------------------
+      // GUARDAR TOKENS
+      // -----------------------
+      localStorage.setItem("access", loginData.access);
+      localStorage.setItem("refresh", loginData.refresh);
 
-      const userRes = await fetch(`${API_URL}/api/auth/me/`, {
+      // -----------------------
+      // OBTENER USUARIO
+      // -----------------------
+      const userRes = await fetch("http://127.0.0.1:8000/api/auth/me/", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data.access}`,
+          Authorization: `Bearer ${loginData.access}`,
         },
       });
 
-      if (!userRes.ok) {
-        throw new Error("Error obteniendo usuario");
-      }
-
       const userData = await userRes.json();
 
-      console.log("USER DATA:", userData);
+      if (!userRes.ok) {
+        setError("Error obteniendo usuario");
+        return;
+      }
 
+      // -----------------------
+      // GUARDAR USUARIO GLOBAL
+      // -----------------------
       setUser(userData);
 
+      // -----------------------
+      // REDIRECCIÓN
+      // -----------------------
       navigate("/portal");
 
     } catch (err) {
-      console.error("ERROR LOGIN:", err);
+      console.error("LOGIN ERROR:", err);
       setError("No se pudo conectar con el servidor");
     } finally {
       setLoading(false);

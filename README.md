@@ -3,8 +3,6 @@
 ## 📌 Descripción
 EstateFlow es una plataforma digital de gestión integral para urbanizaciones residenciales en España, diseñada para digitalizar y optimizar la operativa de comunidades. Permite centralizar la gestión de incidencias, accesos, obras, paquetería, reservas de instalaciones y supervisión general desde un único sistema.
 
-Este proyecto ha sido desarrollado como Proyecto Final de Máster con un enfoque profesional de arquitectura Full Stack, utilizando una separación clara entre backend y frontend para garantizar escalabilidad, mantenibilidad y claridad estructural.
-
 ---
 
 ## 🎯 Objetivo del proyecto
@@ -160,20 +158,4 @@ http://localhost:5173
 - Centralización
 - Escalabilidad SaaS
 
----
 
-## 🚀 Futuro
-- Multi-tenant
-- Notificaciones en tiempo real
-- Dashboard avanzado
-- Deploy cloud
-
----
-
-## 🧠 Conclusión
-EstateFlow demuestra una solución completa full stack, con arquitectura profesional, seguridad, control de roles y escalabilidad real.
-
----
-
-## 🎤 Defensa
-"EstateFlow es una plataforma SaaS diseñada para digitalizar la gestión de comunidades, con arquitectura full stack y control de roles profesional."

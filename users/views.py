@@ -16,15 +16,9 @@ User = get_user_model()
 @permission_classes([AllowAny])
 def register_api(request):
     try:
-        data = request.data
-
-        # 🔥 fallback si request.data viene vacío
-        if not data:
-            data = json.loads(request.body)
-
+        data = request.data or json.loads(request.body or "{}")
         username = data.get("username")
         password = data.get("password")
-
     except Exception:
         return Response(
             {"error": "Error leyendo datos"},
@@ -48,6 +42,7 @@ def register_api(request):
         password=password
     )
 
+    # 🔥 asegurar que esté activo para JWT
     user.is_active = True
     user.save()
 
@@ -58,23 +53,24 @@ def register_api(request):
 
 
 # ---------------------------------------
-# LOGIN (🔥 ESTE ES EL QUE FALTABA)
+# LOGIN (CUSTOM JWT)
 # ---------------------------------------
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def login_api(request):
     try:
-        data = request.data
-
-        if not data:
-            data = json.loads(request.body)
-
+        data = request.data or json.loads(request.body or "{}")
         username = data.get("username")
         password = data.get("password")
-
     except Exception:
         return Response(
             {"error": "Error leyendo datos"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    if not username or not password:
+        return Response(
+            {"error": "Usuario y contraseña obligatorios"},
             status=status.HTTP_400_BAD_REQUEST
         )
 
@@ -86,6 +82,12 @@ def login_api(request):
             status=status.HTTP_401_UNAUTHORIZED
         )
 
+    if not user.is_active:
+        return Response(
+            {"error": "Usuario inactivo"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
     refresh = RefreshToken.for_user(user)
 
     return Response({
@@ -95,7 +97,7 @@ def login_api(request):
 
 
 # ---------------------------------------
-# CURRENT USER (opcional pero recomendado)
+# CURRENT USER (🔥 CLAVE PARA FRONTEND)
 # ---------------------------------------
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -105,4 +107,5 @@ def current_user_api(request):
     return Response({
         "id": user.id,
         "username": user.username,
+        "role": user.role,  # 🔥 imprescindible para RoleGuard
     })
