@@ -24,9 +24,9 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Install dependencies
+      - name: Install dependencies (omit optional)
         working-directory: frontend
-        run: npm install
+        run: npm install --omit=optional
 
       - name: Build
         working-directory: frontend
