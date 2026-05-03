@@ -24,15 +24,17 @@ jobs:
           node-version: 20
           cache: "npm"
 
-      - name: Install dependencies (omit optional)
+      - name: Install dependencies (correct way)
         working-directory: frontend
-        run: npm install --omit=optional
+        run: |
+          npm install
+          npm rebuild
 
       - name: Build
         working-directory: frontend
         run: npm run build
 
-      - name: Debug dist (verificar build)
+      - name: Debug dist
         run: ls -la frontend/dist
 
       - name: Setup Pages
