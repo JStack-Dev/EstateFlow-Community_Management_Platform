@@ -4,12 +4,21 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
 
-  // 🔥 PARA VERCEL (no usar el de GitHub Pages)
   base: "/",
+
+  resolve: {
+    alias: {
+      fsevents: false, // 🔥 BLOQUEA totalmente el módulo
+    },
+  },
+
+  optimizeDeps: {
+    exclude: ["fsevents"], // 🔥 evita que Vite lo procese
+  },
 
   build: {
     rollupOptions: {
-      external: ["fsevents"], // 🔥 evita el error en Vercel
+      external: ["fsevents"], // 🔥 seguridad extra
     },
   },
 });
