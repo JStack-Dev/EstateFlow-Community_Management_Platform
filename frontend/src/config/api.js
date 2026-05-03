@@ -1,3 +1,9 @@
-const API_URL = "https://estateflow-backend.onrender.com";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-export default API_URL;
+export default defineConfig({
+  plugins: [react()],
+
+  // 🔥 CLAVE PARA VERCEL
+  base: "/",
+});
