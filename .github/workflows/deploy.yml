@@ -5,9 +5,6 @@ on:
     branches:
       - main
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 permissions:
   contents: read
   pages: write
@@ -21,22 +18,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node (24)
+      - name: Setup Node (20)
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
           cache: "npm"
 
       - name: Install dependencies
         working-directory: frontend
-        run: npm install --legacy-peer-deps
+        run: npm install
 
       - name: Build
         working-directory: frontend
         run: npm run build
 
-      - name: Debug dist
-        run: ls -la frontend
+      - name: Debug dist (verificar build)
+        run: ls -la frontend/dist
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
