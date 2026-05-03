@@ -7,14 +7,15 @@ export default defineConfig({
 
   build: {
     target: "esnext",
-    rollupOptions: {
-      external: [
-        "fsevents",
-        "path",
-        "fs",
-        "module",
-        "postcss"
-      ],
+  },
+
+  resolve: {
+    alias: {
+      path: "path-browserify",
     },
+  },
+
+  optimizeDeps: {
+    exclude: ["path"],
   },
 });
