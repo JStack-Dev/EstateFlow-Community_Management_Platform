@@ -6,6 +6,9 @@ EstateFlow es una plataforma digital de gestión integral para urbanizaciones re
 
 **Proyecto Final del Máster en Desarrollo Full Stack**
 
+> 📄 [Documentación completa del proyecto](DOCUMENTACION.md)
+> 🎬 [Guía de demostración y credenciales](DEMO.md)
+
 ---
 
 ## 🎯 Objetivo del proyecto
