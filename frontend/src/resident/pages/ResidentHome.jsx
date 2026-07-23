@@ -1,16 +1,16 @@
 export default function ResidentHome() {
   return (
     <div>
-      <h1 style={styles.heading}>Welcome to Your Property Portal</h1>
+      <h1 style={styles.heading}>Bienvenido a tu portal de residente</h1>
 
       <div style={styles.card}>
-        <h2 style={styles.cardTitle}>Need Assistance?</h2>
+        <h2 style={styles.cardTitle}>¿Necesitas asistencia?</h2>
         <p style={styles.text}>
-          Our team is available 24/7 to assist you with any request.
+          Nuestro equipo está disponible 24/7 para ayudarte con cualquier solicitud.
         </p>
 
         <a href="/resident/new" style={styles.button}>
-          Request Service
+          Solicitar servicio
         </a>
       </div>
     </div>

@@ -6,9 +6,9 @@ export default function ResidentSidebar() {
       <div style={styles.logo}>EstateFlow</div>
 
       <nav style={styles.nav}>
-        <StyledLink to="/resident">Home</StyledLink>
-        <StyledLink to="/resident/requests">My Requests</StyledLink>
-        <StyledLink to="/resident/new">Request Service</StyledLink>
+        <StyledLink to="/resident">Inicio</StyledLink>
+        <StyledLink to="/resident/requests">Mis solicitudes</StyledLink>
+        <StyledLink to="/resident/new">Solicitar servicio</StyledLink>
       </nav>
     </div>
   );

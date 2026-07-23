@@ -15,11 +15,11 @@ export default function RoleRedirect() {
   }, []);
 
   if (loading) {
-    return <div style={{ padding: "40px" }}>Loading...</div>;
+    return <div style={{ padding: "40px" }}>Cargando...</div>;
   }
 
   if (!role) {
-    return <div style={{ padding: "40px" }}>Unauthorized</div>;
+    return <div style={{ padding: "40px" }}>No autorizado</div>;
   }
 
   if (role === "USER") {

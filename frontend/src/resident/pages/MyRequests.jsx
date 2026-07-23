@@ -1,24 +1,22 @@
 import { useEffect, useState } from "react";
-import API_URL from "../config/api"; // 🔥 IMPORTANTE
+import { apiFetch } from "../../utils/apiClient";
 
 export default function MyRequests() {
   const [requests, setRequests] = useState([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/incidents/`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => setRequests(data));
+    apiFetch("/api/incidents/")
+      .then((res) => res && res.json())
+      .then((data) => data && setRequests(data));
   }, []);
 
   return (
     <div>
-      <h1 style={styles.heading}>My Service Requests</h1>
+      <h1 style={styles.heading}>Mis solicitudes de servicio</h1>
 
       <div style={styles.list}>
         {requests.length === 0 && (
-          <p style={styles.empty}>No requests submitted yet.</p>
+          <p style={styles.empty}>No has enviado ninguna solicitud todavía.</p>
         )}
 
         {requests.map((req) => (
@@ -31,15 +29,15 @@ export default function MyRequests() {
             <p style={styles.location}>{req.location}</p>
 
             <div style={styles.footer}>
-              <span>Urgency: {req.urgency}</span>
+              <span>Urgencia: {req.urgency}</span>
               <span>
-                Created: {new Date(req.created_at).toLocaleDateString()}
+                Creada: {new Date(req.created_at).toLocaleDateString()}
               </span>
             </div>
 
             {req.resolution_time && (
               <div style={styles.resolution}>
-                Resolved in {req.resolution_time} hours
+                Resuelta en {req.resolution_time} horas
               </div>
             )}
           </div>

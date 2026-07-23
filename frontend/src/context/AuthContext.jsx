@@ -36,13 +36,18 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (username, password) => {
-    const res = await fetch(`${API_URL}/api/token/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    let res;
+    try {
+      res = await fetch(`${API_URL}/api/token/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+    } catch (err) {
+      throw new Error("No se pudo conectar con el servidor. Comprueba que el backend esté activo.");
+    }
 
     if (!res.ok) throw new Error("Credenciales incorrectas");
 

@@ -5,7 +5,7 @@ export default function ResidentTopbar() {
         Luxury Property Concierge
       </div>
       <div style={styles.user}>
-        Welcome back
+        Bienvenido de nuevo
       </div>
     </div>
   );

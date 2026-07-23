@@ -18,12 +18,12 @@ export default function RequestDetail() {
   }, [id]);
 
   if (!request) {
-    return <div>Loading...</div>;
+    return <div>Cargando...</div>;
   }
 
   return (
     <div>
-      <h1 style={styles.heading}>Service Request Details</h1>
+      <h1 style={styles.heading}>Detalle de solicitud</h1>
 
       <div style={styles.card}>
         <div style={styles.header}>
@@ -34,23 +34,23 @@ export default function RequestDetail() {
         <p style={styles.description}>{request.description}</p>
 
         <div style={styles.infoGrid}>
-          <InfoItem label="Category" value={request.category} />
-          <InfoItem label="Location" value={request.location} />
-          <InfoItem label="Urgency" value={request.urgency} />
+          <InfoItem label="Categoría" value={request.category} />
+          <InfoItem label="Ubicación" value={request.location} />
+          <InfoItem label="Urgencia" value={request.urgency} />
           <InfoItem
-            label="Created"
+            label="Creada"
             value={new Date(request.created_at).toLocaleString()}
           />
           {request.resolved_at && (
             <InfoItem
-              label="Resolved"
+              label="Resuelta"
               value={new Date(request.resolved_at).toLocaleString()}
             />
           )}
           {request.resolution_time && (
             <InfoItem
-              label="Resolution Time"
-              value={`${request.resolution_time} hours`}
+              label="Tiempo de resolución"
+              value={`${request.resolution_time} horas`}
             />
           )}
         </div>

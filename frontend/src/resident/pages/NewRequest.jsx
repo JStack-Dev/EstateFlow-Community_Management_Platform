@@ -61,10 +61,10 @@ export default function NewRequest() {
       if (response && response.ok) {
         navigate("/resident/requests");
       } else {
-        alert("Error submitting request.");
+        alert("Error al enviar la solicitud.");
       }
     } catch (error) {
-      alert("Connection error.");
+      alert("Error de conexión con el servidor.");
     }
 
     setLoading(false);
@@ -72,11 +72,11 @@ export default function NewRequest() {
 
   return (
     <div>
-      <h1 style={styles.heading}>Request Service</h1>
+      <h1 style={styles.heading}>Solicitar servicio</h1>
 
       <form style={styles.form} onSubmit={handleSubmit}>
         <div style={styles.group}>
-          <label style={styles.label}>Service Title</label>
+          <label style={styles.label}>Título del servicio</label>
           <input
             type="text"
             name="title"
@@ -88,25 +88,25 @@ export default function NewRequest() {
         </div>
 
         <div style={styles.group}>
-          <label style={styles.label}>Category</label>
+          <label style={styles.label}>Categoría</label>
           <select
             name="category"
             style={styles.input}
             value={formData.category}
             onChange={handleChange}
           >
-            <option value="ELECTRICITY">Electricity</option>
-            <option value="PLUMBING">Plumbing</option>
-            <option value="SECURITY">Security</option>
-            <option value="GARDENING">Gardening</option>
-            <option value="CLEANING">Cleaning</option>
-            <option value="INFRASTRUCTURE">Infrastructure</option>
-            <option value="EMERGENCY">Emergency</option>
+            <option value="ELECTRICITY">Electricidad</option>
+            <option value="PLUMBING">Fontanería</option>
+            <option value="SECURITY">Seguridad</option>
+            <option value="GARDENING">Jardinería</option>
+            <option value="CLEANING">Limpieza</option>
+            <option value="INFRASTRUCTURE">Infraestructura</option>
+            <option value="EMERGENCY">Emergencia</option>
           </select>
         </div>
 
         <div style={styles.group}>
-          <label style={styles.label}>Location</label>
+          <label style={styles.label}>Ubicación</label>
           <input
             type="text"
             name="location"
@@ -118,7 +118,7 @@ export default function NewRequest() {
         </div>
 
         <div style={styles.group}>
-          <label style={styles.label}>Urgency Level</label>
+          <label style={styles.label}>Nivel de urgencia</label>
           <select
             name="urgency"
             style={styles.input}
@@ -126,13 +126,13 @@ export default function NewRequest() {
             onChange={handleChange}
           >
             <option value="NORMAL">Normal</option>
-            <option value="HIGH">High</option>
-            <option value="CRITICAL">Critical</option>
+            <option value="HIGH">Alta</option>
+            <option value="CRITICAL">Crítica</option>
           </select>
         </div>
 
         <div style={styles.group}>
-          <label style={styles.label}>Description</label>
+          <label style={styles.label}>Descripción</label>
           <textarea
             name="description"
             required
@@ -145,7 +145,7 @@ export default function NewRequest() {
 
         {/* IMAGEN */}
         <div style={styles.group}>
-          <label style={styles.label}>Attach Photo (optional)</label>
+          <label style={styles.label}>Adjuntar foto (opcional)</label>
           <input
             type="file"
             accept="image/*"
@@ -155,12 +155,12 @@ export default function NewRequest() {
 
         {preview && (
           <div style={styles.previewContainer}>
-            <img src={preview} alt="Preview" style={styles.preview} />
+            <img src={preview} alt="Vista previa" style={styles.preview} />
           </div>
         )}
 
         <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? "Submitting..." : "Submit Request"}
+          {loading ? "Enviando..." : "Enviar solicitud"}
         </button>
       </form>
     </div>
