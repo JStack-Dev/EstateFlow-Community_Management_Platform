@@ -26,7 +26,7 @@ import Paquetes from "./operativa/pages/Paquetes";
 import AccesosOperativa from "./operativa/pages/Accesos";
 
 // Admin
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import UsersPage from "./pages/admin/UsersPage";
 
 function App() {

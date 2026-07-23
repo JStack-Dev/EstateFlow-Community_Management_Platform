@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import UserSerializer
 import json
 
 User = get_user_model()
@@ -103,9 +104,60 @@ def login_api(request):
 @permission_classes([IsAuthenticated])
 def current_user_api(request):
     user = request.user
+    serializer = UserSerializer(user)
+    data = serializer.data
+    if user.vivienda:
+        data["vivienda"] = str(user.vivienda)
+    else:
+        data["vivienda"] = None
+    return Response(data)
 
-    return Response({
-        "id": user.id,
-        "username": user.username,
-        "role": user.role,  # 🔥 imprescindible para RoleGuard
-    })
+
+# ---------------------------------------
+# USER MANAGEMENT (ADMIN)
+# ---------------------------------------
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def user_list_api(request):
+
+    if request.user.role != "ADMIN":
+        return Response(
+            {"error": "No autorizado"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    users = User.objects.all().order_by("id")
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def user_update_api(request, pk):
+
+    if request.user.role != "ADMIN":
+        return Response(
+            {"error": "No autorizado"},
+            status=status.HTTP_403_FORBIDDEN
+        )
+
+    try:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
+        return Response(
+            {"error": "Usuario no encontrado"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    data = request.data
+    if "role" in data and data["role"] not in ["ADMIN", "STAFF", "USER"]:
+        return Response(
+            {"error": "Rol no válido"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    serializer = UserSerializer(user, data=data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -153,6 +153,11 @@ def incident_stats_api(request):
     """
     Devuelve métricas ejecutivas para dashboard premium.
     """
+    if request.user.role not in ["ADMIN", "STAFF"]:
+        return Response(
+            {"error": "No autorizado"},
+            status=status.HTTP_403_FORBIDDEN,
+        )
 
     total = Incident.objects.count()
     open_count = Incident.objects.filter(status=Incident.Status.OPEN).count()

@@ -1,15 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import API_URL from "../../config/api";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function OperativaLayout({ children }) {
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
-  const handleLogout = async () => {
-    await fetch(`${API_URL}/api/logout/`, {
-      method: "POST",
-      credentials: "include",
-    });
-
+  const handleLogout = () => {
+    logout();
     navigate("/login");
   };
 

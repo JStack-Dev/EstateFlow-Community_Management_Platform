@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import API_URL from "../config/api";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Register() {
 
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -13,6 +14,7 @@ export default function Register() {
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -25,11 +27,12 @@ export default function Register() {
 
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     try {
 
       const response = await fetch(
-        `${API_URL}/api/auth/register/`, // 🔥 AQUÍ ESTÁ LA CLAVE
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/register/`,
         {
           method: "POST",
           headers: {
@@ -43,13 +46,23 @@ export default function Register() {
 
       if (!response.ok) {
         setError(data.error || "Error al registrar usuario");
+        setLoading(false);
         return;
       }
 
-      navigate("/login");
+      const userData = await login(formData.username, formData.password);
+
+      if (userData.role === "ADMIN") {
+        navigate("/admin");
+      } else if (userData.role === "STAFF") {
+        navigate("/operativa");
+      } else {
+        navigate("/portal");
+      }
 
     } catch {
       setError("No se pudo conectar con el servidor");
+      setLoading(false);
     }
   };
 
@@ -93,8 +106,8 @@ export default function Register() {
 
         {error && <div style={styles.error}>{error}</div>}
 
-        <button style={styles.button}>
-          Crear cuenta
+        <button style={styles.button} disabled={loading}>
+          {loading ? "Creando..." : "Crear cuenta"}
         </button>
 
         <div style={styles.footer}>

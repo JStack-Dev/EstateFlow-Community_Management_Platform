@@ -1,28 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 import NotificationBell from "../../components/NotificationBell";
-import API_URL from "../../config/api"; // 🔥 IMPORTANTE
 
 export default function PortalLayout({ children }) {
 
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
 
-  const handleLogout = async () => {
-
-    try {
-
-      await fetch(`${API_URL}/api/auth/logout/`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-    } catch (error) {
-
-      console.error("Error cerrando sesión", error);
-
-    }
-
+  const handleLogout = () => {
+    logout();
     navigate("/login");
-
   };
 
   return (

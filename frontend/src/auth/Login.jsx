@@ -43,7 +43,7 @@ export default function Login() {
       }
     } catch (err) {
       console.error("LOGIN ERROR:", err);
-      setError("No se pudo conectar con el servidor. Comprueba que el backend esté activo.");
+      setError(err?.message || "Error al iniciar sesión");
     } finally {
       setLoading(false);
     }
