@@ -2,21 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Incidencias</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incidencias — EstateFlow</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: #f8fafc; color: #1e293b; padding: 2rem; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 1.75rem; margin-bottom: 0.5rem; color: #0f172a; }
+        .subtitle { color: #64748b; margin-bottom: 2rem; }
+        .nav { display: flex; gap: 1rem; margin-bottom: 2rem; align-items: center; }
+        .nav a { color: #3b63f6; text-decoration: none; font-size: 0.875rem; }
+        .nav a:hover { text-decoration: underline; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        th { text-align: left; padding: 0.75rem 1rem; background: #f1f5f9; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; }
+        td { padding: 0.75rem 1rem; border-top: 1px solid #e2e8f0; font-size: 0.875rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .badge-open { background: #fef3c7; color: #92400e; }
+        .badge-progress { background: #dbeafe; color: #1e40af; }
+        .badge-resolved { background: #d1fae5; color: #065f46; }
+        .empty { text-align: center; padding: 3rem; color: #94a3b8; }
+    </style>
 </head>
 <body>
-    <h1>Listado de incidencias</h1>
+    <div class="container">
+        <div class="nav">
+            <a href="/">← Volver al inicio</a>
+            <a href="/admin/">Panel admin</a>
+            <a href="/logout/">Cerrar sesión</a>
+        </div>
 
-    <ul>
-        {% for incident in incidents %}
-            <li>
-                <strong>{{ incident.title }}</strong> -
-                {{ incident.get_status_display }} -
-                {{ incident.priority }}
-            </li>
-        {% empty %}
-            <li>No hay incidencias.</li>
-        {% endfor %}
-    </ul>
+        <h1>Listado de Incidencias</h1>
+        <p class="subtitle">Gestión de incidencias reportadas en la urbanización.</p>
+
+        {% if incidents %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Estado</th>
+                        <th>Urgencia</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for incident in incidents %}
+                        <tr>
+                            <td><strong>{{ incident.title }}</strong></td>
+                            <td>
+                                {% if incident.status == "OPEN" %}
+                                    <span class="badge badge-open">Abierta</span>
+                                {% elif incident.status == "IN_PROGRESS" %}
+                                    <span class="badge badge-progress">En progreso</span>
+                                {% elif incident.status == "RESOLVED" %}
+                                    <span class="badge badge-resolved">Resuelta</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ incident.urgency }}</td>
+                            <td>{{ incident.created_at|date:"d M Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty">
+                <p>No hay incidencias registradas.</p>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>

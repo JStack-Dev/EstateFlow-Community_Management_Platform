@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstateFlow — Gestión de Comunidades</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: #f8fafc; color: #1e293b; }
+
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: white; border-bottom: 1px solid #e2e8f0; }
+        .brand { display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: 700; color: #0f172a; }
+        .brand-icon { width: 32px; height: 32px; background: #2a47e6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; }
+        .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+        .nav-links a { color: #475569; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #0f172a; }
+        .btn-login { background: #2a47e6; color: white; padding: 0.5rem 1.25rem; border-radius: 8px; font-size: 0.875rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+        .btn-login:hover { background: #1e36c4; }
+
+        /* Hero */
+        .hero { text-align: center; padding: 5rem 2rem; max-width: 800px; margin: 0 auto; }
+        .hero h1 { font-size: 3rem; line-height: 1.1; color: #0f172a; margin-bottom: 1.5rem; letter-spacing: -0.03em; }
+        .hero p { font-size: 1.125rem; color: #64748b; line-height: 1.6; margin-bottom: 2rem; }
+        .hero-cta { display: inline-flex; gap: 1rem; }
+        .btn-primary { background: #2a47e6; color: white; padding: 0.75rem 1.75rem; border-radius: 10px; font-size: 1rem; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+        .btn-primary:hover { background: #1e36c4; }
+        .btn-secondary { background: white; color: #334155; border: 1px solid #e2e8f0; padding: 0.75rem 1.75rem; border-radius: 10px; font-size: 1rem; font-weight: 500; text-decoration: none; transition: border-color 0.2s; }
+        .btn-secondary:hover { border-color: #cbd5e1; }
+
+        /* Features */
+        .features { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .feature { background: white; border-radius: 12px; padding: 2rem; border: 1px solid #e2e8f0; transition: box-shadow 0.2s; }
+        .feature:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+        .feature h3 { font-size: 1.125rem; color: #0f172a; margin-bottom: 0.5rem; }
+        .feature p { font-size: 0.875rem; color: #64748b; line-height: 1.5; }
+        .feature-icon { width: 40px; height: 40px; border-radius: 10px; background: #f0f4ff; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem; }
+
+        /* Footer */
+        .footer { text-align: center; padding: 2rem; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 0.8125rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-icon">EF</div>
+            EstateFlow
+        </div>
+        <div class="nav-links">
+            <a href="/incidents/">Incidencias</a>
+            <a href="/admin/">Admin</a>
+            <a href="/login/" class="btn-login">Iniciar sesión</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Gestión inteligente de tu urbanización</h1>
+        <p>EstateFlow digitaliza y centraliza toda la operativa de comunidades residenciales: incidencias, reservas, paquetería, accesos, obras y notificaciones desde una única plataforma.</p>
+        <div class="hero-cta">
+            <a href="/login/" class="btn-primary">Acceder al sistema</a>
+            <a href="/incidents/" class="btn-secondary">Ver incidencias</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <div class="feature-icon">📋</div>
+            <h3>Gestión de incidencias</h3>
+            <p>Reporta y sigue el estado de incidencias en tu vivienda o zonas comunes con trazabilidad completa.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📅</div>
+            <h3>Reservas de instalaciones</h3>
+            <p>Reserva pistas de pádel, salones sociales y otras instalaciones comunes con validación de disponibilidad.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📦</div>
+            <h3>Paquetería</h3>
+            <p>Control de recepción y entrega de paquetes con seguimiento en tiempo real.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🔐</div>
+            <h3>Control de accesos</h3>
+            <p>Autoriza visitas y proveedores para acceder a la urbanización de forma segura.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🏗️</div>
+            <h3>Registro de obras</h3>
+            <p>Notifica obras en tu vivienda para autorizar accesos de empresas y trabajadores.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">📊</div>
+            <h3>Métricas y KPIs</h3>
+            <p>Panel de control con indicadores clave: tiempos de resolución, incidencias abiertas y más.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        EstateFlow — Proyecto Final de Máster en Desarrollo Full Stack · Django + React + TypeScript
+    </footer>
+</body>
+</html>
