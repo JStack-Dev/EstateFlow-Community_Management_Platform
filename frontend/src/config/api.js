@@ -1,9 +1,3 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-export default defineConfig({
-  plugins: [react()],
-
-  // 🔥 CLAVE PARA VERCEL
-  base: "/",
-});
+export default API_URL;

@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../utils/apiClient";
 
 export default function NotificationBell() {
 
   const [notifications, setNotifications] = useState([]);
   const [open, setOpen] = useState(false);
 
-  const API = "http://localhost:8000/api/notifications/resident/";
-
   const loadNotifications = async () => {
 
     try {
 
-      const response = await fetch(API, {
-        credentials: "include"
-      });
+      const response = await apiFetch("/api/notifications/resident/");
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         console.error("Error cargando notificaciones");
         return;
       }

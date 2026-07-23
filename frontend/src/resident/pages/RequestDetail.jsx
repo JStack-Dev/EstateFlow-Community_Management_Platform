@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function RequestDetail() {
   const { id } = useParams();
   const [request, setRequest] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/api/incidents/`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
+    apiFetch("/api/incidents/")
+      .then((res) => res && res.json())
       .then((data) => {
-        const found = data.find((item) => item.id === parseInt(id));
-        setRequest(found);
+        if (data) {
+          const found = data.find((item) => item.id === parseInt(id));
+          setRequest(found);
+        }
       });
   }, [id]);
 

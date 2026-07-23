@@ -25,18 +25,25 @@ async function refreshAccessToken() {
   return data.access;
 }
 
+function buildHeaders(options) {
+  const access = localStorage.getItem("access");
+  const isFormData = options.body instanceof FormData;
+  const headers = {
+    ...(options.headers || {}),
+    Authorization: access ? `Bearer ${access}` : "",
+  };
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
+  return headers;
+}
+
 // 🔥 FETCH GLOBAL
 export async function apiFetch(endpoint, options = {}) {
-  let access = localStorage.getItem("access");
-
   // 🔹 PRIMERA PETICIÓN
   let response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-      Authorization: access ? `Bearer ${access}` : "",
-    },
+    headers: buildHeaders(options),
   });
 
   // 🔁 SI FALLA → INTENTAR REFRESH
@@ -44,19 +51,21 @@ export async function apiFetch(endpoint, options = {}) {
     try {
       const newAccess = await refreshAccessToken();
 
-      // 🔁 repetir petición
-      response = await fetch(`${API_URL}${endpoint}`, {
+      const refreshedOptions = {
         ...options,
         headers: {
-          "Content-Type": "application/json",
           ...(options.headers || {}),
           Authorization: `Bearer ${newAccess}`,
         },
-      });
+      };
+      if (!(options.body instanceof FormData)) {
+        refreshedOptions.headers["Content-Type"] = "application/json";
+      }
+
+      response = await fetch(`${API_URL}${endpoint}`, refreshedOptions);
     } catch (error) {
       console.error("Refresh fallido:", error);
 
-      // 🔥 LIMPIEZA TOTAL
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
 

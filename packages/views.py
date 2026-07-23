@@ -1,11 +1,9 @@
 from django.utils import timezone
 
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
-from incidents.authentication import CsrfExemptSessionAuthentication
 
 from .models import Package
 from .serializers import PackageSerializer
@@ -13,7 +11,6 @@ from .serializers import PackageSerializer
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def resident_packages_api(request):
 
     user = request.user
@@ -27,12 +24,11 @@ def resident_packages_api(request):
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def staff_packages_api(request):
 
     user = request.user
 
-    if user.tipo_usuario != "PERSONAL":
+    if user.role not in ["STAFF", "ADMIN"]:
         return Response(
             {"error": "No autorizado"},
             status=status.HTTP_403_FORBIDDEN
@@ -59,13 +55,18 @@ def staff_packages_api(request):
                 status=status.HTTP_201_CREATED
             )
 
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["PATCH"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def deliver_package_api(request, pk):
+
+    if request.user.role not in ["STAFF", "ADMIN"]:
+        return Response(
+            {"error": "No autorizado"},
+            status=status.HTTP_403_FORBIDDEN
+        )
 
     try:
         package = Package.objects.get(pk=pk)

@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -26,66 +26,24 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (loading) return; // 🔥 evita doble submit
+    if (loading) return;
 
     setError(null);
     setLoading(true);
 
     try {
-      // -----------------------
-      // LOGIN (TOKEN)
-      // -----------------------
-      const loginRes = await fetch("http://127.0.0.1:8000/api/token/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const userData = await login(formData.username, formData.password);
 
-      const loginData = await loginRes.json();
-
-      if (!loginRes.ok) {
-        setError(loginData?.detail || "Credenciales incorrectas");
-        return;
+      if (userData.role === "ADMIN") {
+        navigate("/admin");
+      } else if (userData.role === "STAFF") {
+        navigate("/operativa");
+      } else {
+        navigate("/portal");
       }
-
-      // -----------------------
-      // GUARDAR TOKENS
-      // -----------------------
-      localStorage.setItem("access", loginData.access);
-      localStorage.setItem("refresh", loginData.refresh);
-
-      // -----------------------
-      // OBTENER USUARIO
-      // -----------------------
-      const userRes = await fetch("http://127.0.0.1:8000/api/auth/me/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${loginData.access}`,
-        },
-      });
-
-      const userData = await userRes.json();
-
-      if (!userRes.ok) {
-        setError("Error obteniendo usuario");
-        return;
-      }
-
-      // -----------------------
-      // GUARDAR USUARIO GLOBAL
-      // -----------------------
-      setUser(userData);
-
-      // -----------------------
-      // REDIRECCIÓN
-      // -----------------------
-      navigate("/portal");
-
     } catch (err) {
       console.error("LOGIN ERROR:", err);
-      setError("No se pudo conectar con el servidor");
+      setError(err?.message || "No se pudo conectar con el servidor");
     } finally {
       setLoading(false);
     }

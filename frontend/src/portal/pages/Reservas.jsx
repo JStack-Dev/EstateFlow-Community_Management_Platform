@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Reservas() {
-
-  const API = "http://localhost:8000/api/reservations/";
-  const FACILITIES_API = "http://localhost:8000/api/reservations/facilities/";
 
   const [reservations, setReservations] = useState([]);
   const [facilities, setFacilities] = useState([]);
@@ -17,25 +15,23 @@ export default function Reservas() {
 
   const loadReservations = async () => {
 
-    const response = await fetch(API, {
-      credentials: "include"
-    });
+    const response = await apiFetch("/api/reservations/");
 
-    const data = await response.json();
-
-    setReservations(data);
+    if (response && response.ok) {
+      const data = await response.json();
+      setReservations(data);
+    }
 
   };
 
   const loadFacilities = async () => {
 
-    const response = await fetch(FACILITIES_API, {
-      credentials: "include"
-    });
+    const response = await apiFetch("/api/reservations/facilities/");
 
-    const data = await response.json();
-
-    setFacilities(data);
+    if (response && response.ok) {
+      const data = await response.json();
+      setFacilities(data);
+    }
 
   };
 
@@ -59,21 +55,12 @@ export default function Reservas() {
 
     e.preventDefault();
 
-    const response = await fetch(API, {
-
+    const response = await apiFetch("/api/reservations/", {
       method: "POST",
-
-      credentials: "include",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
       body: JSON.stringify(form)
-
     });
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       alert("No se pudo crear la reserva");
       return;
     }

@@ -1,9 +1,7 @@
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
-from incidents.authentication import CsrfExemptSessionAuthentication
 
 from .models import Work
 from .serializers import WorkSerializer
@@ -11,7 +9,6 @@ from .serializers import WorkSerializer
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def resident_works_api(request):
 
     user = request.user
@@ -37,15 +34,14 @@ def resident_works_api(request):
                 status=status.HTTP_201_CREATED
             )
 
-        return Response(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def staff_works_api(request):
 
-    if request.user.tipo_usuario != "PERSONAL":
+    if request.user.role not in ["STAFF", "ADMIN"]:
 
         return Response(
             {"error": "No autorizado"},

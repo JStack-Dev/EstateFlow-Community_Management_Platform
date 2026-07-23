@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Incidencias() {
-
-  const API = "http://localhost:8000/api/incidents/";
 
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,11 +24,9 @@ export default function Incidencias() {
 
     try {
 
-      const response = await fetch(API, {
-        credentials: "include"
-      });
+      const response = await apiFetch("/api/incidents/");
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         throw new Error("Error cargando incidencias");
       }
 
@@ -77,21 +74,12 @@ export default function Incidencias() {
 
     try {
 
-      const response = await fetch(API, {
-
+      const response = await apiFetch("/api/incidents/", {
         method: "POST",
-
-        credentials: "include",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
         body: JSON.stringify(form)
-
       });
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
 
         const data = await response.json();
 

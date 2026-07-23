@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import API_URL from "../../config/api";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -8,30 +8,26 @@ export default function UsersPage() {
   // CARGAR USUARIOS
   // -------------------------
   useEffect(() => {
-    fetch(`${API_URL}/api/users/`, {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
+    apiFetch("/api/users/")
+      .then((res) => res && res.json())
+      .then((data) => data && setUsers(data));
   }, []);
 
   // -------------------------
   // CAMBIAR ROLE
   // -------------------------
   const updateRole = (userId, newRole) => {
-    fetch(`${API_URL}/api/users/${userId}/`, {
+    apiFetch(`/api/users/${userId}/`, {
       method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ role: newRole }),
     })
-      .then((res) => res.json())
+      .then((res) => res && res.json())
       .then((updatedUser) => {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === userId ? updatedUser : u))
-        );
+        if (updatedUser) {
+          setUsers((prev) =>
+            prev.map((u) => (u.id === userId ? updatedUser : u))
+          );
+        }
       });
   };
 
@@ -39,19 +35,17 @@ export default function UsersPage() {
   // ACTIVAR / DESACTIVAR
   // -------------------------
   const toggleActivo = (user) => {
-    fetch(`${API_URL}/api/users/${user.id}/`, {
+    apiFetch(`/api/users/${user.id}/`, {
       method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify({ activo: !user.activo }),
     })
-      .then((res) => res.json())
+      .then((res) => res && res.json())
       .then((updatedUser) => {
-        setUsers((prev) =>
-          prev.map((u) => (u.id === user.id ? updatedUser : u))
-        );
+        if (updatedUser) {
+          setUsers((prev) =>
+            prev.map((u) => (u.id === user.id ? updatedUser : u))
+          );
+        }
       });
   };
 

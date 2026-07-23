@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Perfil() {
 
@@ -9,14 +10,9 @@ export default function Perfil() {
 
     try {
 
-      const response = await fetch(
-        "http://localhost:8000/api/auth/me/",
-        {
-          credentials: "include"
-        }
-      );
+      const response = await apiFetch("/api/auth/me/");
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         console.error("Error cargando usuario");
         return;
       }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function NewRequest() {
   const navigate = useNavigate();
@@ -52,16 +53,12 @@ export default function NewRequest() {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/incidents/",
-        {
-          method: "POST",
-          credentials: "include",
-          body: data,
-        }
-      );
+      const response = await apiFetch("/api/incidents/", {
+        method: "POST",
+        body: data,
+      });
 
-      if (response.ok) {
+      if (response && response.ok) {
         navigate("/resident/requests");
       } else {
         alert("Error submitting request.");

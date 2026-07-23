@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Inicio() {
 
@@ -17,24 +18,22 @@ export default function Inicio() {
     try {
 
       const endpoints = [
-        "http://localhost:8000/api/incidents/",
-        "http://localhost:8000/api/reservations/resident/",
-        "http://localhost:8000/api/packages/resident/",
-        "http://localhost:8000/api/access/resident/",
-        "http://localhost:8000/api/works/resident/"
+        "/api/incidents/",
+        "/api/reservations/",
+        "/api/packages/resident/",
+        "/api/access/resident/",
+        "/api/works/resident/"
       ];
 
       const responses = await Promise.all(
-        endpoints.map(url =>
-          fetch(url, { credentials: "include" })
-        )
+        endpoints.map(url => apiFetch(url))
       );
 
       const data = await Promise.all(
         responses.map(async (response) => {
 
-          if (!response.ok) {
-            console.error("Error cargando:", response.url);
+          if (!response || !response.ok) {
+            console.error("Error cargando datos");
             return [];
           }
 

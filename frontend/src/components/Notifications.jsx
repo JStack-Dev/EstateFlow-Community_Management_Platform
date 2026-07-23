@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../utils/apiClient";
 
 export default function Notifications() {
 
@@ -6,16 +7,12 @@ export default function Notifications() {
 
   const loadNotifications = async () => {
 
-    const response = await fetch(
-      "http://localhost:8000/api/notifications/resident/",
-      {
-        credentials: "include"
-      }
-    );
+    const response = await apiFetch("/api/notifications/resident/");
 
-    const data = await response.json();
-
-    setNotifications(data);
+    if (response && response.ok) {
+      const data = await response.json();
+      setNotifications(data);
+    }
 
   };
 

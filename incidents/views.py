@@ -7,12 +7,10 @@ from rest_framework import status
 from rest_framework.decorators import (
     api_view,
     permission_classes,
-    authentication_classes,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .authentication import CsrfExemptSessionAuthentication
 from .models import Incident
 from .serializers import IncidentSerializer
 
@@ -42,7 +40,6 @@ def incident_list(request):
 # --------------------------------------------------
 
 @api_view(["GET", "POST"])
-@authentication_classes([CsrfExemptSessionAuthentication])
 @permission_classes([IsAuthenticated])
 def incident_list_api(request):
 
@@ -95,7 +92,6 @@ def incident_list_api(request):
 # --------------------------------------------------
 
 @api_view(["PATCH"])
-@authentication_classes([CsrfExemptSessionAuthentication])
 @permission_classes([IsAuthenticated])
 def incident_update_api(request, pk):
 
@@ -152,7 +148,6 @@ def incident_update_api(request, pk):
 # --------------------------------------------------
 
 @api_view(["GET"])
-@authentication_classes([CsrfExemptSessionAuthentication])
 @permission_classes([IsAuthenticated])
 def incident_stats_api(request):
     """

@@ -1,15 +1,13 @@
 import { createContext, useEffect, useState } from "react";
+import API_URL from "../config/api";
+import { apiFetch } from "../utils/apiClient";
 
 export const AuthContext = createContext(null);
-
-// 🔥 BACKEND EN PRODUCCIÓN
-const API_URL = "https://estateflow-backend.onrender.com";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Cargar usuario si hay token
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("access");
@@ -20,13 +18,9 @@ export function AuthProvider({ children }) {
       }
 
       try {
-        const res = await fetch(`${API_URL}/api/auth/me/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await apiFetch("/api/auth/me/");
 
-        if (!res.ok) throw new Error("No autenticado");
+        if (!res || !res.ok) throw new Error("No autenticado");
 
         const data = await res.json();
         setUser(data);
@@ -41,47 +35,38 @@ export function AuthProvider({ children }) {
     fetchUser();
   }, []);
 
-  // 🔐 LOGIN
   const login = async (username, password) => {
-    try {
-      const res = await fetch(`${API_URL}/api/token/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+    const res = await fetch(`${API_URL}/api/token/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
 
-      if (!res.ok) throw new Error("Credenciales incorrectas");
+    if (!res.ok) throw new Error("Credenciales incorrectas");
 
-      const data = await res.json();
+    const data = await res.json();
 
-      localStorage.setItem("access", data.access);
-      localStorage.setItem("refresh", data.refresh);
+    localStorage.setItem("access", data.access);
+    localStorage.setItem("refresh", data.refresh);
 
-      const resUser = await fetch(`${API_URL}/api/auth/me/`, {
-        headers: {
-          Authorization: `Bearer ${data.access}`,
-        },
-      });
+    const resUser = await apiFetch("/api/auth/me/");
 
-      if (!resUser.ok) throw new Error("Error obteniendo usuario");
+    if (!resUser || !resUser.ok) throw new Error("Error obteniendo usuario");
 
-      const userData = await resUser.json();
-
-      setUser(userData);
-    } catch (error) {
-      console.error("Error en login:", error);
-      setUser(null);
-    }
+    const userData = await resUser.json();
+    setUser(userData);
+    return userData;
   };
 
-  // 🚪 LOGOUT
   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
     setUser(null);
   };
+
+  const role = user?.role ?? null;
 
   return (
     <AuthContext.Provider
@@ -91,6 +76,9 @@ export function AuthProvider({ children }) {
         login,
         logout,
         loading,
+        isAuthenticated: !!user,
+        isAdmin: role === "ADMIN",
+        isStaff: role === "STAFF" || role === "ADMIN",
       }}
     >
       {children}

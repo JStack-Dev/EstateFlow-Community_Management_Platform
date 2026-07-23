@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Accesos() {
-
-  const API = "http://localhost:8000/api/access/resident/";
 
   const [accesses, setAccesses] = useState([]);
 
@@ -22,11 +21,9 @@ export default function Accesos() {
 
     try {
 
-      const response = await fetch(API, {
-        credentials: "include"
-      });
+      const response = await apiFetch("/api/access/resident/");
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
         console.error("Error cargando accesos");
         return;
       }
@@ -74,21 +71,12 @@ export default function Accesos() {
 
     try {
 
-      const response = await fetch(API, {
-
+      const response = await apiFetch("/api/access/resident/", {
         method: "POST",
-
-        credentials: "include",
-
-        headers: {
-          "Content-Type": "application/json"
-        },
-
         body: JSON.stringify(form)
-
       });
 
-      if (!response.ok) {
+      if (!response || !response.ok) {
 
         alert("Error creando autorización");
 

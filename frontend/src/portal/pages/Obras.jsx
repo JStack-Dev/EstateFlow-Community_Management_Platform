@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Obras() {
-
-  const API = "http://localhost:8000/api/works/resident/";
 
   const [works, setWorks] = useState([]);
 
@@ -17,13 +16,12 @@ export default function Obras() {
 
   const loadWorks = async () => {
 
-    const response = await fetch(API, {
-      credentials: "include"
-    });
+    const response = await apiFetch("/api/works/resident/");
 
-    const data = await response.json();
-
-    setWorks(data);
+    if (response && response.ok) {
+      const data = await response.json();
+      setWorks(data);
+    }
 
   };
 
@@ -46,21 +44,12 @@ export default function Obras() {
 
     e.preventDefault();
 
-    const response = await fetch(API, {
-
+    const response = await apiFetch("/api/works/resident/", {
       method: "POST",
-
-      credentials: "include",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
       body: JSON.stringify(form)
-
     });
 
-    if (!response.ok) {
+    if (!response || !response.ok) {
       alert("Error registrando obra");
       return;
     }

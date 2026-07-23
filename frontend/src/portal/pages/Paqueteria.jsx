@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../../utils/apiClient";
 
 export default function Paqueteria() {
-
-  const API = "http://localhost:8000/api/packages/resident/";
 
   const [packages, setPackages] = useState([]);
 
   const loadPackages = async () => {
 
-    const response = await fetch(API, {
-      credentials: "include"
-    });
+    const response = await apiFetch("/api/packages/resident/");
 
-    const data = await response.json();
-
-    setPackages(data);
+    if (response && response.ok) {
+      const data = await response.json();
+      setPackages(data);
+    }
 
   };
 

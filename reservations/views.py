@@ -1,9 +1,7 @@
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
-from incidents.authentication import CsrfExemptSessionAuthentication
 
 from .models import Reservation, Facility
 from .serializers import ReservationSerializer, FacilitySerializer
@@ -11,7 +9,6 @@ from .serializers import ReservationSerializer, FacilitySerializer
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def facilities_list_api(request):
 
     facilities = Facility.objects.filter(active=True)
@@ -23,7 +20,6 @@ def facilities_list_api(request):
 
 @api_view(["GET", "POST"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([CsrfExemptSessionAuthentication])
 def reservations_api(request):
 
     user = request.user
