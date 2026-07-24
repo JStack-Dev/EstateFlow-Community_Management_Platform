@@ -161,7 +161,7 @@ Esto crea todos los datos de demostración: urbanización, viviendas, usuarios, 
 | Jardín sin mantenimiento | Resuelta | Normal |
 | Cámara de seguridad rota | En progreso | Alta |
 | Ascensor bloqueado | Abierta | Crítica |
-| Piscenta con algas | Resuelta | Normal |
+| Piscina con algas | Resuelta | Normal |
 | Ruido en obra vecina | Abierta | Normal |
 | Barandilla suelta | Abierta | Alta |
 | Caldera comunitaria | En progreso | Alta |

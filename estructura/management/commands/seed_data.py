@@ -21,6 +21,19 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS("🚀 Iniciando seed de datos..."))
 
+        # Limpiar datos existentes para evitar conflictos
+        self.stdout.write("  🧹 Limpiando datos existentes...")
+        Notification.objects.all().delete()
+        Work.objects.all().delete()
+        VisitorAccess.objects.all().delete()
+        Package.objects.all().delete()
+        Reservation.objects.all().delete()
+        Incident.objects.all().delete()
+        Facility.objects.all().delete()
+        Vivienda.objects.all().delete()
+        Urbanizacion.objects.all().delete()
+        User.objects.all().delete()
+
         # --------------------------------------------------
         # URBANIZACIÓN
         # --------------------------------------------------
@@ -146,7 +159,7 @@ class Command(BaseCommand):
             ("Jardín sin mantenimiento", "Los jardines de la zona común entre los bloques A y B necesitan mantenimiento.", "GARDENING", "Zona común central", "NORMAL", "RESOLVED", residentes[2]),
             ("Cámara de seguridad rota", "La cámara de seguridad de la entrada principal no graba.", "SECURITY", "Entrada principal", "HIGH", "IN_PROGRESS", residentes[4]),
             ("Ascensor bloqueado", "El ascensor del Bloque B se ha quedado bloqueado entre el 1º y 2º.", "EMERGENCY", "Bloque B", "CRITICAL", "OPEN", residentes[5]),
-            ("Piscenta con algas", "La piscina tiene un exceso de algas en los bordes.", "CLEANING", "Piscina", "NORMAL", "RESOLVED", residentes[6]),
+            ("Piscina con algas", "La piscina tiene un exceso de algas en los bordes.", "CLEANING", "Piscina", "NORMAL", "RESOLVED", residentes[6]),
             ("Ruido en obra vecina", "El vecino del C-101 está haciendo obras fuera del horario permitido.", "SECURITY", "Chalet C-101", "NORMAL", "OPEN", residentes[0]),
             ("Barandilla suelta", "La barandilla de la terraza del Bloque A, 2º está suelta.", "INFRASTRUCTURE", "Bloque A, 2º", "HIGH", "OPEN", residentes[2]),
             ("Caldera comunitaria", "La caldera comunitaria del Bloque B no calienta suficiente.", "INFRASTRUCTURE", "Sala de calderas B", "HIGH", "IN_PROGRESS", residentes[3]),
