@@ -45,3 +45,8 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 pnpm-debug.log*
+
+# Root-level node artifacts (screenshots script only)
+/package.json
+/package-lock.json
+/playwright/
