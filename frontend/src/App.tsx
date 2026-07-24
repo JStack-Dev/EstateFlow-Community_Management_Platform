@@ -7,9 +7,7 @@ import {
   UserCheck,
   HardHat,
   User,
-  Settings,
   Users,
-  ClipboardList,
 } from "lucide-react";
 import type { NavItem } from "@/components/layout/Sidebar";
 

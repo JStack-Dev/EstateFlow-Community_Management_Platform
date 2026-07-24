@@ -3,6 +3,8 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    vivienda = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = User
         fields = [
@@ -12,4 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
             "role",
             "tipo_usuario",
             "activo",
+            "is_active",
+            "vivienda",
         ]

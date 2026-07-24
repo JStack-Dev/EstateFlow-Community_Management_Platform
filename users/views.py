@@ -105,12 +105,7 @@ def login_api(request):
 def current_user_api(request):
     user = request.user
     serializer = UserSerializer(user)
-    data = serializer.data
-    if user.vivienda:
-        data["vivienda"] = str(user.vivienda)
-    else:
-        data["vivienda"] = None
-    return Response(data)
+    return Response(serializer.data)
 
 
 # ---------------------------------------
