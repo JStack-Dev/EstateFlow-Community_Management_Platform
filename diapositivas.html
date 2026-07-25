@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EstateFlow — Presentación</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0f172a; color: #f8fafc; overflow: hidden; }
+  .slide { display: none; min-height: 100vh; padding: 4rem 6rem; flex-direction: column; justify-content: center; }
+  .slide.active { display: flex; }
+  .slide-number { position: fixed; bottom: 2rem; right: 3rem; font-size: 0.875rem; color: #64748b; }
+  h1 { font-size: 3rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 1rem; }
+  h2 { font-size: 2rem; font-weight: 600; color: #93c5fd; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+  h3 { font-size: 1.25rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.5rem; }
+  p { font-size: 1.25rem; line-height: 1.7; color: #cbd5e1; max-width: 900px; }
+  ul { list-style: none; margin-top: 1rem; }
+  li { font-size: 1.15rem; line-height: 2; color: #cbd5e1; padding-left: 2rem; position: relative; }
+  li::before { content: "▸"; position: absolute; left: 0; color: #3b63f6; font-weight: bold; }
+  .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; margin-right: 0.5rem; }
+  .badge-blue { background: #1e3a5f; color: #93c5fd; }
+  .badge-green { background: #064e3b; color: #6ee7b7; }
+  .badge-purple { background: #3b0764; color: #c4b5fd; }
+  .badge-amber { background: #78350f; color: #fcd34d; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+  .card { background: #1e293b; border-radius: 1rem; padding: 1.5rem; border: 1px solid #334155; }
+  .card h3 { color: #f8fafc; margin-bottom: 0.5rem; }
+  .card p { font-size: 0.95rem; color: #94a3b8; line-height: 1.5; }
+  .logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .logo-icon { width: 56px; height: 56px; background: #2a47e6; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+  .logo-text { font-size: 1.8rem; font-weight: 700; color: #f8fafc; }
+  .credential-box { background: #1e293b; border: 1px solid #334155; border-radius: 1rem; padding: 2rem; margin-top: 1.5rem; }
+  .credential-box table { width: 100%; border-collapse: collapse; }
+  .credential-box th { text-align: left; padding: 0.75rem; color: #64748b; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #334155; }
+  .credential-box td { padding: 0.75rem; color: #e2e8f0; font-size: 1rem; border-bottom: 1px solid #1e293b; }
+  .credential-box td:first-child { font-weight: 600; }
+  .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+  .tech-col h3 { color: #3b63f6; margin-bottom: 1rem; font-size: 1.1rem; }
+  .tech-col ul li { font-size: 1rem; line-height: 1.8; }
+  .url-box { background: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1rem 1.5rem; margin-top: 1rem; font-family: monospace; font-size: 1rem; color: #93c5fd; word-break: break-all; }
+  .controls { position: fixed; bottom: 2rem; left: 3rem; display: flex; gap: 1rem; }
+  .btn { background: #2a47e6; color: white; border: none; padding: 0.5rem 1.25rem; border-radius: 0.5rem; font-size: 0.875rem; cursor: pointer; font-weight: 500; }
+  .btn:hover { background: #1e36c4; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .highlight { color: #3b63f6; font-weight: 600; }
+  .stat { text-align: center; }
+  .stat .num { font-size: 3rem; font-weight: 700; color: #3b63f6; }
+  .stat .label { font-size: 0.875rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Portada -->
+<div class="slide active" id="s1">
+  <div class="logo">
+    <div class="logo-icon">🏢</div>
+    <div class="logo-text">EstateFlow</div>
+  </div>
+  <h1>Gestión inteligente de comunidades residenciales</h1>
+  <p>Plataforma SaaS que digitaliza y centraliza la operativa de urbanizaciones: incidencias, reservas, paquetería, accesos, obras y notificaciones.</p>
+  <div style="margin-top: 2rem;">
+    <span class="badge badge-blue">Django 5</span>
+    <span class="badge badge-green">React 19</span>
+    <span class="badge badge-purple">TypeScript</span>
+    <span class="badge badge-amber">Tailwind CSS v4</span>
+  </div>
+  <p style="margin-top: 3rem; color: #64748b; font-size: 1rem;">Proyecto Final — Máster en Desarrollo Full Stack</p>
+</div>
+
+<!-- SLIDE 2: Problema -->
+<div class="slide" id="s2">
+  <h2>El problema</h2>
+  <p>La mayoría de comunidades residenciales gestionan su operativa mediante:</p>
+  <ul>
+    <li>Grupos de WhatsApp desordenados</li>
+    <li>Papel y cuadernos de notas</li>
+    <li>Hojas de cálculo sin control de acceso</li>
+    <li>Llamadas telefónicas para reportar incidencias</li>
+  </ul>
+  <p style="margin-top: 2rem;">Esto genera <span class="highlight">pérdida de información</span>, <span class="highlight">falta de trazabilidad</span> y <span class="highlight">procesos lentos</span>.</p>
+</div>
+
+<!-- SLIDE 3: Solución -->
+<div class="slide" id="s3">
+  <h2>La solución</h2>
+  <p>EstateFlow centraliza toda la operativa en una plataforma digital con:</p>
+  <div class="grid">
+    <div class="card">
+      <h3>📋 Incidencias</h3>
+      <p>Reporte y seguimiento con máquina de estados y trazabilidad completa.</p>
+    </div>
+    <div class="card">
+      <h3>📅 Reservas</h3>
+      <p>Reserva de instalaciones comunes con validación de disponibilidad.</p>
+    </div>
+    <div class="card">
+      <h3>📦 Paquetería</h3>
+      <p>Control de recepción y entrega de paquetes en tiempo real.</p>
+    </div>
+    <div class="card">
+      <h3>🔐 Accesos</h3>
+      <p>Autorización de visitas y proveedores de forma segura.</p>
+    </div>
+    <div class="card">
+      <h3>🏗️ Obras</h3>
+      <p>Registro de obras para autorizar accesos de empresas.</p>
+    </div>
+    <div class="card">
+      <h3>📊 KPIs</h3>
+      <p>Panel de control con tiempos de resolución e incidencias abiertas.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: Tecnologías -->
+<div class="slide" id="s4">
+  <h2>Tecnologías</h2>
+  <div class="tech-grid">
+    <div class="tech-col">
+      <h3>Backend</h3>
+      <ul>
+        <li>Python 3.12 + Django 5</li>
+        <li>Django REST Framework</li>
+        <li>SimpleJWT (autenticación)</li>
+        <li>SQLite / PostgreSQL</li>
+        <li>Desplegado en Render</li>
+      </ul>
+    </div>
+    <div class="tech-col">
+      <h3>Frontend</h3>
+      <ul>
+        <li>React 19 + TypeScript</li>
+        <li>Vite 8</li>
+        <li>Tailwind CSS v4</li>
+        <li>Framer Motion</li>
+        <li>GitHub Pages + CI/CD</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: Roles -->
+<div class="slide" id="s5">
+  <h2>Roles de usuario</h2>
+  <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="card">
+      <h3>👑 ADMIN</h3>
+      <p>Gestión global: usuarios, métricas, KPIs, incidencias críticas. Acceso a todo el sistema.</p>
+    </div>
+    <div class="card">
+      <h3>🔧 STAFF</h3>
+      <p>Operativa diaria: gestionar incidencias, registrar paquetes, controlar accesos.</p>
+    </div>
+    <div class="card">
+      <h3>👤 USER</h3>
+      <p>Residente: reportar incidencias, reservar instalaciones, autorizar visitas, registrar obras.</p>
+    </div>
+  </div>
+  <p style="margin-top: 2rem;">Cada rol tiene <span class="highlight">vistas y permisos diferenciados</span> tanto en la API como en el frontend.</p>
+</div>
+
+<!-- SLIDE 6: Demo - Credenciales -->
+<div class="slide" id="s6">
+  <h2>Demostración</h2>
+  <p>URL de acceso:</p>
+  <div class="url-box">https://jstack-dev.github.io/EstateFlow-Community_Management_Platform/</div>
+  <div class="credential-box">
+    <table>
+      <tr><th>Rol</th><th>Usuario</th><th>Contraseña</th></tr>
+      <tr><td>👑 Admin</td><td>admin</td><td>admin123456</td></tr>
+      <tr><td>🔧 Staff</td><td>porteria</td><td>staff123456</td></tr>
+      <tr><td>👤 Residente</td><td>maria</td><td>user123456</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 7: Máquina de estados -->
+<div class="slide" id="s7">
+  <h2>Máquina de estados de incidencias</h2>
+  <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin-top: 3rem;">
+    <div style="background: #78350f; color: #fcd34d; padding: 1.5rem 2rem; border-radius: 1rem; font-size: 1.25rem; font-weight: 600;">OPEN</div>
+    <div style="font-size: 2rem; color: #64748b;">→</div>
+    <div style="background: #1e3a5f; color: #93c5fd; padding: 1.5rem 2rem; border-radius: 1rem; font-size: 1.25rem; font-weight: 600;">IN_PROGRESS</div>
+    <div style="font-size: 2rem; color: #64748b;">→</div>
+    <div style="background: #064e3b; color: #6ee7b7; padding: 1.5rem 2rem; border-radius: 1rem; font-size: 1.25rem; font-weight: 600;">RESOLVED</div>
+  </div>
+  <p style="margin-top: 3rem; text-align: center;">El sistema valida las transiciones permitidas. No se pueden saltar estados.</p>
+</div>
+
+<!-- SLIDE 8: Integración React + Backend -->
+<div class="slide" id="s8">
+  <h2>Integración React + Backend</h2>
+  <ul>
+    <li>Autenticación JWT (access + refresh tokens)</li>
+    <li>Peticiones autenticadas con Bearer token</li>
+    <li>Renovación automática del token al expirar</li>
+    <li>Componentes reutilizables con Tailwind CSS</li>
+    <li>Animaciones con Framer Motion</li>
+    <li>Routing protegido por rol (RoleGuard + ProtectedRoute)</li>
+  </ul>
+  <p style="margin-top: 2rem;">El frontend hace peticiones reales al backend Django y renderiza los datos en tiempo real.</p>
+</div>
+
+<!-- SLIDE 9: Despliegue -->
+<div class="slide" id="s9">
+  <h2>Despliegue</h2>
+  <div class="grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="card">
+      <h3>Backend — Render</h3>
+      <div class="url-box" style="font-size: 0.85rem;">https://estateflow-backend.onrender.com</div>
+    </div>
+    <div class="card">
+      <h3>Frontend — GitHub Pages</h3>
+      <div class="url-box" style="font-size: 0.85rem;">https://jstack-dev.github.io/EstateFlow-Community_Management_Platform/</div>
+    </div>
+  </div>
+  <p style="margin-top: 2rem;">CI/CD con GitHub Actions: cada push a <code style="color:#93c5fd;">main</code> reconstruye y despliega automáticamente.</p>
+  <div class="url-box" style="font-size: 0.85rem;">https://github.com/JStack-Dev/EstateFlow-Community_Management_Platform</div>
+</div>
+
+<!-- SLIDE 10: Cierre -->
+<div class="slide" id="s10">
+  <div class="logo">
+    <div class="logo-icon">🏢</div>
+    <div class="logo-text">EstateFlow</div>
+  </div>
+  <h1>Gracias por vuestra atención</h1>
+  <p style="margin-top: 1rem;">EstateFlow automatiza procesos que antes requerían llamadas y papel, aporta trazabilidad completa y da visibilidad a toda la comunidad.</p>
+  <div style="margin-top: 3rem; display: flex; gap: 2rem;">
+    <div class="stat">
+      <div class="num">9</div>
+      <div class="label">Apps Django</div>
+    </div>
+    <div class="stat">
+      <div class="num">35</div>
+      <div class="label">Componentes React</div>
+    </div>
+    <div class="stat">
+      <div class="num">20+</div>
+      <div class="label">Endpoints API</div>
+    </div>
+    <div class="stat">
+      <div class="num">3</div>
+      <div class="label">Roles</div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-number" id="slideNum">1 / 10</div>
+
+<div class="controls">
+  <button class="btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← Anterior</button>
+  <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = 10;
+
+  function changeSlide(dir) {
+    document.getElementById('s' + current).classList.remove('active');
+    current += dir;
+    if (current < 1) current = 1;
+    if (current > total) current = total;
+    document.getElementById('s' + current).classList.add('active');
+    document.getElementById('slideNum').textContent = current + ' / ' + total;
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === total;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+</script>
+</body>
+</html>
