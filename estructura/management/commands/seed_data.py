@@ -80,7 +80,7 @@ class Command(BaseCommand):
         # --------------------------------------------------
         # USUARIOS
         # --------------------------------------------------
-        def create_user(username, password, role, tipo, vivienda=None, email=""):
+        def create_user(username, password, role, tipo, vivienda=None, email="", is_staff=False, is_superuser=False, first_name="", last_name=""):
             user, created = User.objects.get_or_create(
                 username=username,
                 defaults={
@@ -88,36 +88,88 @@ class Command(BaseCommand):
                     "tipo_usuario": tipo,
                     "vivienda": vivienda,
                     "email": email or f"{username}@estateflow.es",
+                    "first_name": first_name,
+                    "last_name": last_name,
                     "is_active": True,
                     "activo": True,
+                    "is_staff": is_staff,
+                    "is_superuser": is_superuser,
                 },
             )
-            if created:
-                user.set_password(password)
-                user.save()
+            user.role = role
+            user.tipo_usuario = tipo
+            user.vivienda = vivienda
+            user.email = email or f"{username}@estateflow.es"
+            user.is_active = True
+            user.activo = True
+            user.is_staff = is_staff
+            user.is_superuser = is_superuser
+            if first_name:
+                user.first_name = first_name
+            if last_name:
+                user.last_name = last_name
+            user.set_password(password)
+            user.save()
             return user
 
-        # Admin
-        admin = create_user("admin", "admin123456", "ADMIN", "PERSONAL", email="admin@estateflow.es")
+        # Admin (acceso total a React y a /admin/ de Django)
+        admin = create_user(
+            "admin",
+            "admin123456",
+            "ADMIN",
+            "PERSONAL",
+            email="admin@estateflow.es",
+            is_staff=True,
+            is_superuser=True,
+            first_name="Administrador",
+            last_name="General",
+        )
 
-        # Staff
-        staff1 = create_user("porteria", "staff123456", "STAFF", "PERSONAL", email="porteria@estateflow.es")
-        staff2 = create_user("mantenimiento", "staff123456", "STAFF", "PERSONAL", email="mantenimiento@estateflow.es")
+        # Staff (acceso a operativa y panel de control)
+        staff1 = create_user(
+            "porteria",
+            "staff123456",
+            "STAFF",
+            "PERSONAL",
+            email="porteria@estateflow.es",
+            is_staff=True,
+            first_name="Conserje",
+            last_name="Portería",
+        )
+        staff2 = create_user(
+            "mantenimiento",
+            "staff123456",
+            "STAFF",
+            "PERSONAL",
+            email="mantenimiento@estateflow.es",
+            is_staff=True,
+            first_name="Técnico",
+            last_name="Mantenimiento",
+        )
 
         # Residentes
         residentes = []
         resident_data = [
-            ("maria", "user123456", "PROPIETARIO", "A-101", "maria.garcia@email.com"),
-            ("carlos", "user123456", "INQUILINO", "A-102", "carlos.ruiz@email.com"),
-            ("laura", "user123456", "PROPIETARIO", "A-201", "laura.martin@email.com"),
-            ("javier", "user123456", "PROPIETARIO", "B-101", "javier.lopez@email.com"),
-            ("ana", "user123456", "INQUILINO", "B-102", "ana.sanchez@email.com"),
-            ("pedro", "user123456", "PROPIETARIO", "C-101", "pedro.fernandez@email.com"),
-            ("elena", "user123456", "PROPIETARIO", "C-102", "elena.torres@email.com"),
+            ("maria", "user123456", "PROPIETARIO", "A-101", "maria.garcia@email.com", "María", "García"),
+            ("carlos", "user123456", "INQUILINO", "A-102", "carlos.ruiz@email.com", "Carlos", "Ruiz"),
+            ("laura", "user123456", "PROPIETARIO", "A-201", "laura.martin@email.com", "Laura", "Martín"),
+            ("javier", "user123456", "PROPIETARIO", "B-101", "javier.lopez@email.com", "Javier", "López"),
+            ("ana", "user123456", "INQUILINO", "B-102", "ana.sanchez@email.com", "Ana", "Sánchez"),
+            ("pedro", "user123456", "PROPIETARIO", "C-101", "pedro.fernandez@email.com", "Pedro", "Fernández"),
+            ("elena", "user123456", "PROPIETARIO", "C-102", "elena.torres@email.com", "Elena", "Torres"),
         ]
 
-        for username, pwd, tipo, ref, email in resident_data:
-            u = create_user(username, pwd, "USER", tipo, vivienda=viviendas.get(ref), email=email)
+        for username, pwd, tipo, ref, email, fname, lname in resident_data:
+            u = create_user(
+                username,
+                pwd,
+                "USER",
+                tipo,
+                vivienda=viviendas.get(ref),
+                email=email,
+                first_name=fname,
+                last_name=lname,
+            )
             residentes.append(u)
 
         self.stdout.write(f"  ✅ {len(residentes) + 3} usuarios creados (1 admin, 2 staff, {len(residentes)} residentes)")

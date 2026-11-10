@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guion Real y Teleprompter — Vídeo PFM EstateFlow</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --card-bg: #151f32;
+      --card-border: #24344d;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --voice-bg: #064e3b;
+      --voice-border: #10b981;
+      --action-bg: #1e1b4b;
+      --action-border: #6366f1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      
+      --role-user-bg: #0f2b48;
+      --role-user-border: #0284c7;
+      --role-staff-bg: #0f3523;
+      --role-staff-border: #059669;
+      --role-admin-bg: #32133c;
+      --role-admin-border: #9333ea;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 100px;
+    }
+
+    /* TOP BAR FIJA CON TEMPORIZADOR */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11, 17, 32, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .project-header h1 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-pfm {
+      background: #0284c7;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-display {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: #000;
+      padding: 4px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      min-width: 140px;
+      text-align: center;
+    }
+    .timer-display.safe { color: var(--success); }
+    .timer-display.warn { color: var(--warning); }
+    .timer-display.danger { color: var(--danger); animation: pulse 1s infinite; }
+
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-start { background: #2563eb; color: #fff; }
+    .btn-start:hover { background: #1d4ed8; }
+    .btn-pause { background: #dc2626; color: #fff; }
+    .btn-reset { background: #334155; color: #fff; }
+
+    /* CONTENEDOR */
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+
+    /* CREDENCIALES DIRECTAS */
+    .credentials-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .cred-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cred-tag {
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .tag-user { background: #1e3a8a; color: #93c5fd; }
+    .tag-staff { background: #14532d; color: #86efac; }
+    .tag-admin { background: #701a75; color: #f5d0fe; }
+
+    .copy-chip {
+      background: #334155;
+      color: #fff;
+      border: 1px solid #475569;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 6px;
+      font-family: monospace;
+    }
+    .copy-chip:hover { background: #475569; }
+
+    /* SEPARADOR DE SECCIONES */
+    .section-banner {
+      background: linear-gradient(90deg, #1e293b, #0f172a);
+      border: 1px solid var(--card-border);
+      padding: 12px 20px;
+      border-radius: 10px;
+      margin: 28px 0 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .section-banner h2 {
+      font-size: 1.15rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* TARJETAS DE PASO A PASO */
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    /* VARIANTES POR ROL EN EL PUNTO 3 */
+    .step-card.card-user {
+      border: 1px solid var(--role-user-border);
+    }
+    .step-card.card-user .step-header {
+      background: var(--role-user-bg);
+      border-bottom: 1px solid var(--role-user-border);
+    }
+
+    .step-card.card-staff {
+      border: 1px solid var(--role-staff-border);
+    }
+    .step-card.card-staff .step-header {
+      background: var(--role-staff-bg);
+      border-bottom: 1px solid var(--role-staff-border);
+    }
+
+    .step-card.card-admin {
+      border: 1px solid var(--role-admin-border);
+    }
+    .step-card.card-admin .step-header {
+      background: var(--role-admin-bg);
+      border-bottom: 1px solid var(--role-admin-border);
+    }
+
+    .step-header {
+      background: #192438;
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .step-time {
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: #0b1120;
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+    }
+
+    .step-body {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .step-body { grid-template-columns: 1fr; }
+    }
+
+    /* PANTALLA Y ENLACES */
+    .screen-col {
+      background: var(--action-bg);
+      border: 1px solid var(--action-border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .screen-col h3 {
+      color: #c7d2fe;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .url-box {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .url-box a {
+      color: var(--accent);
+      text-decoration: none;
+      font-family: monospace;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+    .url-box a:hover { text-decoration: underline; color: #7dd3fc; }
+
+    .open-btn {
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .open-btn:hover { background: #1d4ed8; }
+
+    .action-list {
+      list-style: none;
+    }
+
+    .action-list li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #e0e7ff;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .action-list input[type="checkbox"] {
+      margin-top: 4px;
+      transform: scale(1.15);
+      cursor: pointer;
+    }
+
+    .key-badge {
+      background: #312e81;
+      color: #c7d2fe;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* GUION DE VOZ */
+    .voice-col {
+      background: var(--voice-bg);
+      border: 1px solid var(--voice-border);
+      border-radius: 10px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .voice-col h3 {
+      color: #a7f3d0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .script-text {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #f0fdf4;
+      font-weight: 450;
+    }
+
+    .script-text p {
+      margin-bottom: 12px;
+    }
+
+    .hl {
+      background: rgba(250, 204, 21, 0.25);
+      color: #fef08a;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .highlight-card {
+      border: 2px solid #f59e0b;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="project-header">
+      <h1>EstateFlow <span class="badge-pfm">Máster Full Stack</span></h1>
+      <p style="font-size: 0.8rem; color: var(--text-muted);">Duración estimada: 4:20 min | Límite máximo: 5:00 min</p>
+    </div>
+
+    <div class="timer-box">
+      <div id="timerDisplay" class="timer-display safe">00:00</div>
+      <button id="startBtn" class="btn btn-start" onclick="toggleTimer()">▶ Iniciar</button>
+      <button class="btn btn-reset" onclick="resetTimer()">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- BLOQUE DE PREPARACIÓN DE PESTAÑAS -->
+    <div style="background: #1e293b; border: 1px solid #3b82f6; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px;">
+      <h3 style="color: #60a5fa; font-size: 0.95rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+        💡 Preparación recomendada (Ten estas 3 pestañas abiertas antes de dar a Grabar):
+      </h3>
+      <ol style="margin-left: 20px; color: #cbd5e1; font-size: 0.92rem; line-height: 1.8;">
+        <li><b>Pestaña 1</b>: <a href="http://localhost:8000/" target="_blank" style="color: #38bdf8;">http://localhost:8000/</a> (Landing de EstateFlow).</li>
+        <li><b>Pestaña 2</b>: <a href="http://localhost:8000/admin/" target="_blank" style="color: #38bdf8;">http://localhost:8000/admin/</a> (Inicia sesión antes con <code>admin</code> / <code>admin123456</code> para mostrar directamente los modelos sin tener que teclear durante el vídeo).</li>
+        <li><b>Pestaña 3</b>: <a href="http://localhost:5173/#/login" target="_blank" style="color: #38bdf8;">http://localhost:5173/#/login</a> (Pantalla de inicio de sesión de React).</li>
+      </ol>
+    </div>
+
+    <!-- BARRA DE ACCESO RÁPIDO A CREDENCIALES -->
+    <div class="credentials-bar">
+      <div class="cred-card">
+        <span class="cred-tag tag-user">Residente</span>
+        <span><b>maria</b> / user123456</span>
+        <div>
+          <button class="copy-chip" onclick="copyText('maria', this)">Usuario</button>
+          <button class="copy-chip" onclick="copyText('user123456', this)">Clave</button>
+        </div>
+      </div>
+
+      <div class="cred-card">
+        <span class="cred-tag tag-staff">Personal / Staff</span>
+        <span><b>porteria</b> / staff123456</span>
+        <div>
+          <button class="copy-chip" onclick="copyText('porteria', this)">Usuario</button>
+          <button class="copy-chip" onclick="copyText('staff123456', this)">Clave</button>
+        </div>
+      </div>
+
+      <div class="cred-card">
+        <span class="cred-tag tag-admin">Administrador</span>
+        <span><b>admin</b> / admin123456</span>
+        <div>
+          <button class="copy-chip" onclick="copyText('admin', this)">Usuario</button>
+          <button class="copy-chip" onclick="copyText('admin123456', this)">Clave</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 1 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-title">
+          <span>1️⃣</span> Portada y Planteamiento del Problema
+        </div>
+        <div class="step-time">0:00 - 0:40</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col">
+          <h3>🖥️ Qué abrir y mostrar en pantalla</h3>
+          
+          <div class="url-box">
+            <a href="http://localhost:8000/" target="_blank">🔗 http://localhost:8000/</a>
+            <a href="http://localhost:8000/" target="_blank" class="open-btn">Abrir</a>
+          </div>
+
+          <ul class="action-list">
+            <li><input type="checkbox"> Abre la pestaña con la <b>Landing Page de EstateFlow</b>.</li>
+            <li><input type="checkbox"> Muestra el título: <i>"Gestión inteligente de tu urbanización"</i>.</li>
+            <li><input type="checkbox"> Haz un scroll suave hacia abajo mostrando las tarjetas de funcionalidades: <i>Gestión de incidencias, Reservas, Paquetería, Control de accesos</i>.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir (Voz clara y pausada)</h3>
+          <div class="script-text">
+            <p>"Hola, soy <span class="hl">Jorge Moscoso</span> y os presento mi Proyecto Final de Máster: <span class="hl">EstateFlow</span>, una plataforma SaaS orientada a la gestión integral y digitalización de comunidades residenciales.</p>
+            <p>El problema habitual en la mayoría de urbanizaciones es la falta de un programa centralizado que atienda todas las necesidades que surgen en el día a día: desde la notificación de averías y la reserva de zonas comunes, hasta la recepción de paquetería y el control de accesos. Al no existir una herramienta unificada, la información se dispersa y se pierde el control.</p>
+            <p>EstateFlow centraliza todos estos procesos en una única aplicación con tres roles específicos: Residentes, Personal operativo y Administrador general."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 2 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-title">
+          <span>2️⃣</span> Tecnologías y Backend en Django (Modelos y ORM)
+        </div>
+        <div class="step-time">0:40 - 1:15</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col">
+          <h3>🖥️ Qué abrir y mostrar en pantalla</h3>
+
+          <div class="url-box">
+            <a href="http://localhost:8000/admin/" target="_blank">🔗 http://localhost:8000/admin/</a>
+            <a href="http://localhost:8000/admin/" target="_blank" class="open-btn">Abrir Admin Django</a>
+          </div>
+
+          <ul class="action-list">
+            <li><input type="checkbox"> Abre el <b>Panel de Administración de Django</b> en el enlace superior.</li>
+            <li><input type="checkbox"> <i>(Si te pide entrar, usa <span class="key-badge">admin</span> / <span class="key-badge">admin123456</span>)</i>.</li>
+            <li><input type="checkbox"> Muestra en pantalla los <b>modelos relacionales creados en Django</b>: <i>Users, Viviendas, Incidencias, Reservas, Paquetería</i>.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir (Sincronizado con lo que se ve)</h3>
+          <div class="script-text">
+            <p>"A nivel arquitectónico, el sistema combina un backend robusto en Django y una interfaz desacoplada con React.</p>
+            <p>En el backend utilizamos <span class="hl">Python 3.12 con Django 5 y Django REST Framework</span>. Como vemos aquí en el panel oficial de Django, disponemos de un modelo de datos relacional completo gestionado por el ORM, con entidades bien estructuradas para usuarios, urbanizaciones, incidencias y reservas.</p>
+            <p>Django se encarga de la lógica de negocio y expone una API REST protegida mediante tokens <span class="hl">JWT con SimpleJWT</span>, que es la que suministra los datos en tiempo real al frontend."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNER SECCIÓN BLOQUE 3 -->
+    <div class="section-banner">
+      <h2><span>3️⃣</span> Demostración en React por Roles (3 Sub-pasos Claros)</h2>
+      <span class="step-time">1:15 - 3:30</span>
+    </div>
+
+    <!-- SUB-PASO 3.1: RESIDENTE -->
+    <div class="step-card card-user">
+      <div class="step-header">
+        <div class="step-title" style="color: #93c5fd;">
+          <span>👤</span> 3.1 — Rol Residente: María (Reportar incidencia y reservas)
+        </div>
+        <div class="step-time">1:15 - 2:00</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col" style="background: #091e3a; border-color: #0284c7;">
+          <h3>🖥️ Acciones en pantalla</h3>
+
+          <div class="url-box">
+            <a href="http://localhost:5173/#/login" target="_blank">🔗 http://localhost:5173/#/login</a>
+            <a href="http://localhost:5173/#/login" target="_blank" class="open-btn">Abrir Login</a>
+          </div>
+
+          <ul class="action-list">
+            <li><input type="checkbox"> En el login escribe: Usuario <span class="key-badge">maria</span> | Clave <span class="key-badge">user123456</span> y pulsa <b>Iniciar sesión</b>.</li>
+            <li><input type="checkbox"> Se abre el <b>Portal del Residente</b>. En el menú lateral haz clic en <b>Incidencias</b>.</li>
+            <li><input type="checkbox"> Pulsa el botón <b>+ Nueva incidencia</b> y rellena:<br>
+              • Título: <code>Luz fundida descansillo</code><br>
+              • Ubicación: <code>Bloque A portal 1</code><br>
+              • Descripción: <code>Parpadea el foco del rellano</code>
+            </li>
+            <li><input type="checkbox"> Pulsa <b>Crear incidencia</b> y señala cómo aparece de inmediato en la tabla.</li>
+            <li><input type="checkbox"> Haz un clic rápido en el menú lateral en <b>Reservas</b> para mostrar las pistas y la piscina.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir mientras usas a María</h3>
+          <div class="script-text">
+            <p>"Pasamos a la Single Page Application desarrollada en <span class="hl">React 19, TypeScript y Vite</span> con estilos en <span class="hl">Tailwind CSS v4</span>.</p>
+            <p>Iniciamos sesión como residente con <span class="hl">María</span>. El sistema detecta su rol USER y abre su portal privado. Si vamos a la sección de Incidencias, creamos una nueva avería de ejemplo.</p>
+            <p>Al pulsar en 'Crear incidencia', vemos cómo se añade al instante en la lista gracias al estado reactivo, sin recargar la página. Además, desde el menú lateral el vecino puede reservar pistas de pádel o piscina con control de horarios."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-PASO 3.2: STAFF -->
+    <div class="step-card card-staff">
+      <div class="step-header">
+        <div class="step-title" style="color: #86efac;">
+          <span>🔧</span> 3.2 — Rol Personal Operativo: Portería (Gestión y máquina de estados)
+        </div>
+        <div class="step-time">2:00 - 2:45</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col" style="background: #0a2718; border-color: #059669;">
+          <h3>🖥️ Acciones en pantalla</h3>
+
+          <ul class="action-list">
+            <li><input type="checkbox"> <b>Cierra sesión</b> (abajo del todo en el menú lateral izquierdo).</li>
+            <li><input type="checkbox"> En el login escribe: Usuario <span class="key-badge">porteria</span> | Clave <span class="key-badge">staff123456</span> y pulsa <b>Iniciar sesión</b>.</li>
+            <li><input type="checkbox"> Se abre el <b>Panel Operativo</b> con las tarjetas de métricas del servicio.</li>
+            <li><input type="checkbox"> En el menú lateral izquierdo haz clic en <b>Incidencias</b>.</li>
+            <li><input type="checkbox"> Localiza la avería <i>Luz fundida descansillo</i> y en la columna <b>Cambiar estado</b> selecciona: <span class="key-badge">En progreso</span>.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir mientras usas a Portería</h3>
+          <div class="script-text">
+            <p>"Ahora cerramos sesión y accedemos con el perfil operativo de conserjería con el usuario <span class="hl">portería</span>.</p>
+            <p>La aplicación nos redirige automáticamente a su panel de control operativo. Al entrar en Incidencias, el personal técnico visualiza las averías reportadas por los vecinos.</p>
+            <p>Desde el desplegable de acciones, el operario avanza el estado de la incidencia de 'Abierta' a <span class="hl">'En progreso'</span>, implementando un flujo de trabajo controlado por una máquina de estados para asegurar la trazabilidad del mantenimiento."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-PASO 3.3: ADMIN -->
+    <div class="step-card card-admin">
+      <div class="step-header">
+        <div class="step-title" style="color: #f5d0fe;">
+          <span>👑</span> 3.3 — Rol Administrador: Admin (KPIs y Gestión de Usuarios)
+        </div>
+        <div class="step-time">2:45 - 3:30</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col" style="background: #250b2d; border-color: #9333ea;">
+          <h3>🖥️ Acciones en pantalla</h3>
+
+          <ul class="action-list">
+            <li><input type="checkbox"> <b>Cierra sesión</b> de nuevo (abajo del todo en el menú lateral).</li>
+            <li><input type="checkbox"> En el login escribe: Usuario <span class="key-badge">admin</span> | Clave <span class="key-badge">admin123456</span> y pulsa <b>Iniciar sesión</b>.</li>
+            <li><input type="checkbox"> Muestra el <b>Dashboard de Administrador</b>: 6 tarjetas de métricas (Total, Abiertas, Resueltas, Tiempo medio, etc.) y la alerta de incidencias críticas.</li>
+            <li><input type="checkbox"> En el menú lateral izquierdo haz clic en <b>Usuarios</b> (o pulsa el botón <i>Gestionar usuarios</i>).</li>
+            <li><input type="checkbox"> Señala la tabla de usuarios donde el admin puede cambiar roles (USER, STAFF, ADMIN) o activar/desactivar cuentas.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir mientras usas a Admin</h3>
+          <div class="script-text">
+            <p>"Por último, cerramos sesión e iniciamos como <span class="hl">Administrador general</span> con el usuario admin.</p>
+            <p>El administrador cuenta con un cuadro de mandos global con KPIs esenciales: tiempo medio de resolución, volumen de averías resueltas y alertas de incidencias críticas en zonas comunes.</p>
+            <p>Además, dispone del módulo de <span class="hl">Gestión de Usuarios</span>, donde puede modificar roles en caliente y habilitar o suspender cuentas de residentes o empleados según las necesidades de la comunidad."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 4: REQUISITO OBLIGATORIO REACT + API (SECUENCIAL PASO A PASO) -->
+    <div class="step-card highlight-card">
+      <div class="step-header" style="background: #3b1d11; border-color: #b45309;">
+        <div class="step-title" style="color: #fef3c7;">
+          <span>⭐</span> 4️⃣ Requisito Clave: React Consumiendo Datos del Backend en Vivo (Paso a Paso Sincronizado)
+        </div>
+        <div class="step-time" style="background: #78350f; color: #fde68a;">3:30 - 4:15</div>
+      </div>
+      
+      <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+
+        <!-- PASO 4.1 -->
+        <div style="background: #1c1917; border: 1px solid #78350f; border-radius: 10px; padding: 18px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <input type="checkbox" style="transform: scale(1.3); cursor: pointer;">
+            <span style="background: #b45309; color: #fff; font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">PASO 1</span>
+            <b style="color: #fef3c7; font-size: 1.05rem;">🖥️ En pantalla: Abre DevTools en la pestaña Red</b>
+          </div>
+          <p style="color: #cbd5e1; margin-left: 32px; font-size: 0.95rem; margin-bottom: 12px;">
+            Pulsa la tecla <kbd style="background:#27272a; padding:3px 8px; border-radius:4px; border:1px solid #52525b; font-family:monospace; color:#38bdf8; font-weight:bold;">F12</kbd> &nbsp;➔&nbsp; Haz clic arriba en la pestaña <b style="color:#fff;">Red (Network)</b> &nbsp;➔&nbsp; Justo debajo haz clic en el filtro <b style="color:#fff;">Fetch/XHR</b>.
+          </p>
+          <div style="background: #272115; border-left: 4px solid #f59e0b; padding: 12px 16px; margin-left: 32px; border-radius: 0 8px 8px 0;">
+            <span style="color: #fcd34d; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">🎙️ Qué decir mientras lo abres:</span>
+            <p style="color: #fef3c7; font-size: 1.15rem; margin-top: 6px; line-height: 1.6;">
+              "Vamos a ver ahora cómo se comunica la aplicación en tiempo real abriendo la pestaña de Red en las herramientas de desarrollador."
+            </p>
+          </div>
+        </div>
+
+        <!-- PASO 4.2 -->
+        <div style="background: #1c1917; border: 1px solid #78350f; border-radius: 10px; padding: 18px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <input type="checkbox" style="transform: scale(1.3); cursor: pointer;">
+            <span style="background: #b45309; color: #fff; font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">PASO 2</span>
+            <b style="color: #fef3c7; font-size: 1.05rem;">🖥️ En pantalla: Recarga la página y muestra las peticiones Fetch</b>
+          </div>
+          <p style="color: #cbd5e1; margin-left: 32px; font-size: 0.95rem; margin-bottom: 12px;">
+            Pulsa <kbd style="background:#27272a; padding:3px 8px; border-radius:4px; border:1px solid #52525b; font-family:monospace; color:#38bdf8; font-weight:bold;">F5</kbd> para recargar. Verás aparecer en la lista peticiones como <code style="color:#38bdf8;">me/</code> y <code style="color:#38bdf8;">users/</code> (o <code style="color:#38bdf8;">incidents/</code>).
+          </p>
+          <div style="background: #272115; border-left: 4px solid #f59e0b; padding: 12px 16px; margin-left: 32px; border-radius: 0 8px 8px 0;">
+            <span style="color: #fcd34d; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">🎙️ Qué decir mientras se ven cargar:</span>
+            <p style="color: #fef3c7; font-size: 1.15rem; margin-top: 6px; line-height: 1.6;">
+              "Al recargar la vista, observamos cómo los componentes de React realizan peticiones HTTP Fetch contra los endpoints del backend de Django, en este caso a /api/auth/me/ y a /api/users/."
+            </p>
+          </div>
+        </div>
+
+        <!-- PASO 4.3 -->
+        <div style="background: #1c1917; border: 1px solid #78350f; border-radius: 10px; padding: 18px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <input type="checkbox" style="transform: scale(1.3); cursor: pointer;">
+            <span style="background: #b45309; color: #fff; font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">PASO 3</span>
+            <b style="color: #fef3c7; font-size: 1.05rem;">🖥️ En pantalla: Haz clic en users/ y ve a la pestaña Encabezados (Headers)</b>
+          </div>
+          <p style="color: #cbd5e1; margin-left: 32px; font-size: 0.95rem; margin-bottom: 12px;">
+            Haz clic en la fila de <code style="color:#38bdf8;">users/</code> &nbsp;➔&nbsp; En el panel lateral entra en la pestaña <b style="color:#fff;">Encabezados (Headers)</b> &nbsp;➔&nbsp; Señala con el ratón la línea: <code style="color:#a7f3d0; background:#064e3b; padding:2px 6px; border-radius:4px;">Authorization: Bearer &lt;token_jwt&gt;</code>.
+          </p>
+          <div style="background: #272115; border-left: 4px solid #f59e0b; padding: 12px 16px; margin-left: 32px; border-radius: 0 8px 8px 0;">
+            <span style="color: #fcd34d; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">🎙️ Qué decir señalando el Bearer token:</span>
+            <p style="color: #fef3c7; font-size: 1.15rem; margin-top: 6px; line-height: 1.6;">
+              "En los encabezados de la petición se comprueba el envío del token <span class="hl">Bearer JWT</span> obtenido en el login para verificar los permisos del usuario..."
+            </p>
+          </div>
+        </div>
+
+        <!-- PASO 4.4 -->
+        <div style="background: #1c1917; border: 1px solid #78350f; border-radius: 10px; padding: 18px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <input type="checkbox" style="transform: scale(1.3); cursor: pointer;">
+            <span style="background: #b45309; color: #fff; font-size: 0.8rem; font-weight: 800; padding: 2px 8px; border-radius: 4px;">PASO 4</span>
+            <b style="color: #fef3c7; font-size: 1.05rem;">🖥️ En pantalla: Haz clic en la pestaña Respuesta (Response) y muestra el JSON</b>
+          </div>
+          <p style="color: #cbd5e1; margin-left: 32px; font-size: 0.95rem; margin-bottom: 12px;">
+            Haz clic en la pestaña <b style="color:#fff;">Respuesta (Response)</b> justo al lado de Headers &nbsp;➔&nbsp; Muestra la lista de usuarios en formato JSON que envía Django.
+          </p>
+          <div style="background: #272115; border-left: 4px solid #f59e0b; padding: 12px 16px; margin-left: 32px; border-radius: 0 8px 8px 0;">
+            <span style="color: #fcd34d; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">🎙️ Qué decir mostrando el JSON:</span>
+            <p style="color: #fef3c7; font-size: 1.15rem; margin-top: 6px; line-height: 1.6;">
+              "...y el backend responde con los datos en formato JSON, que React procesa y pinta en pantalla de forma dinámica y reactiva."
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BLOQUE 5 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-title">
+          <span>5️⃣</span> Conclusiones y Cierre
+        </div>
+        <div class="step-time">4:15 - 4:35</div>
+      </div>
+      <div class="step-body">
+        <div class="screen-col">
+          <h3>🖥️ Qué hacer en pantalla</h3>
+          <ul class="action-list">
+            <li><input type="checkbox"> Cierra las DevTools pulsando de nuevo <b>F12</b> (o con la X).</li>
+            <li><input type="checkbox"> Deja en pantalla el dashboard principal de la aplicación.</li>
+          </ul>
+        </div>
+        <div class="voice-col">
+          <h3>🎙️ Qué decir</h3>
+          <div class="script-text">
+            <p>"EstateFlow reúne de forma completa las exigencias del Máster en Desarrollo Full Stack: una arquitectura limpia y desacoplada, backend con Django y persistencia de datos relacional, interfaz reactiva en React consumiendo la API, control riguroso de roles y seguridad.</p>
+            <p>Muchas gracias por vuestra atención y quedo a vuestra total disposición para la defensa del proyecto."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let seconds = 0;
+    let timerInterval = null;
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function updateDisplay() {
+      const display = document.getElementById("timerDisplay");
+      display.innerText = formatTime(seconds);
+
+      if (seconds >= 265 && seconds < 295) { // 4:25 a 4:55
+        display.className = "timer-display warn";
+      } else if (seconds >= 295) { // >= 4:55
+        display.className = "timer-display danger";
+      } else {
+        display.className = "timer-display safe";
+      }
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById("startBtn");
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        btn.innerText = "▶ Reanudar";
+        btn.className = "btn btn-start";
+      } else {
+        timerInterval = setInterval(() => {
+          seconds++;
+          updateDisplay();
+        }, 1000);
+        btn.innerText = "⏸ Pausar";
+        btn.className = "btn btn-pause";
+      }
+    }
+
+    function resetTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      seconds = 0;
+      updateDisplay();
+      const btn = document.getElementById("startBtn");
+      btn.innerText = "▶ Iniciar";
+      btn.className = "btn btn-start";
+    }
+
+    function copyText(val, btn) {
+      navigator.clipboard.writeText(val);
+      const orig = btn.innerText;
+      btn.innerText = "✓ Copiado";
+      setTimeout(() => { btn.innerText = orig; }, 1400);
+    }
+  </script>
+</body>
+</html>
